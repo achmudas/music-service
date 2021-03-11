@@ -1,0 +1,28 @@
+version: '3.4'
+services:
+  contentmanager:
+    build:
+      context: .
+    depends_on:
+      - mongodb
+    environment:
+      DATASOURCE_URL: "mongodb"
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+  mongodb:
+    image: mongo:4.4.4
+    ports:
+      - 27017:27017
+    expose:
+      - 27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    container_name: 'mongodb'
+    volumes:
+      - data:/data/db
+
+volumes:
+  data:
