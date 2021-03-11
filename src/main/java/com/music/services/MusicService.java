@@ -1,6 +1,6 @@
 package com.music.services;
 
-import com.music.models.api.FoundArtist;
+import com.music.models.api.Result;
 
 import java.util.List;
 
@@ -12,6 +12,6 @@ public interface MusicService {
      * @param artistName
      * @return
      */
-    List<FoundArtist> findArtistsByArtistName(String artistName);
+    List<Result> findArtistsByArtistName(String artistName);
 
 }

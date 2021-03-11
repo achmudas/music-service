@@ -1,6 +1,6 @@
 package com.music.api;
 
-import com.music.models.api.FoundArtist;
+import com.music.models.api.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -40,7 +40,7 @@ public interface ArtistsApi {
             @ApiResponse(
                     code = 200,
                     message = "Artists were successfully found",
-                    response = FoundArtist.class,
+                    response = Result.class,
                     responseContainer = "List"),
             @ApiResponse(
                     code = 404,
@@ -48,9 +48,9 @@ public interface ArtistsApi {
                     responseContainer = "List"),
             @ApiResponse(
                     code = 500,
-                    message = "Internal server error", response = FoundArtist.class)})
+                    message = "Internal server error")})
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<FoundArtist>> findArtists(
+    ResponseEntity<List<Result>> findArtists(
             @Parameter(description = "Artist name")
             @RequestParam(value="artistName", required = true) String artistName
     );

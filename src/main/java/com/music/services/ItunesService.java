@@ -1,6 +1,6 @@
 package com.music.services;
 
-import com.music.models.api.FoundArtist;
+import com.music.models.api.Result;
 import com.music.models.api.SearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class ItunesService implements MusicService{
 
 
     @Override
-    public List<FoundArtist> findArtistsByArtistName(String artistName) {
+    public List<Result> findArtistsByArtistName(String artistName) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.valueOf("text/javascript;charset=utf-8")));
 //        headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
@@ -53,7 +53,7 @@ public class ItunesService implements MusicService{
                 restTemplate.exchange(uri, HttpMethod.POST, entity, SearchResponse.class);
         logger.info("Response retrieved: {}", response);
 
-        List<FoundArtist> foundArtists = response.getBody().getResults();
-        return foundArtists;
+        List<Result> results = response.getBody().getResults();
+        return results;
     }
 }

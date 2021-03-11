@@ -1,7 +1,7 @@
 package com.music.controllers;
 
 import com.music.api.ArtistsApi;
-import com.music.models.api.FoundArtist;
+import com.music.models.api.Result;
 import com.music.services.MusicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,10 +28,10 @@ public class ArtistsController implements ArtistsApi {
 //    }
 
     @Override
-    public ResponseEntity<List<FoundArtist>> findArtists(String artistName) {
-        List<FoundArtist> foundArtists = this.musicService.findArtistsByArtistName(artistName);
-        return (foundArtists == null || foundArtists.isEmpty()) ?
+    public ResponseEntity<List<Result>> findArtists(String artistName) {
+        List<Result> results = this.musicService.findArtistsByArtistName(artistName);
+        return (results == null || results.isEmpty()) ?
                 new ResponseEntity<>(new ArrayList<>(), null, HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(foundArtists, null, HttpStatus.OK);
+                new ResponseEntity<>(results, null, HttpStatus.OK);
     }
 }

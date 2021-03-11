@@ -2,11 +2,10 @@ package com.music.models.api;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
-public class FoundArtist {
+public class Result {
 
         private WrapperType wrapperType;
         private String artistName;
