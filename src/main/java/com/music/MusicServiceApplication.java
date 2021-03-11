@@ -1,5 +1,6 @@
 package com.music;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -18,20 +19,6 @@ public class MusicServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MusicServiceApplication.class, args);
-	}
-
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder) {
-		return builder
-				.additionalMessageConverters(getMessageConverter())
-//				.errorHandler(errorHandler) #FIXME add error handler
-				.build();
-	}
-
-	private Collection<? extends HttpMessageConverter<?>> getMessageConverter() {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		converter.setSupportedMediaTypes(Arrays.asList(MediaType.parseMediaType("text/javascript;charset=utf-8")));
-		return Arrays.asList(converter);
 	}
 
 }
