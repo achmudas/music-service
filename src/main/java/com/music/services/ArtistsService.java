@@ -30,12 +30,10 @@ public class ArtistsService {
     public ArtistsService(
             ArtistRepository artistRepository,
             MusicService musicService,
-            ModelMapper mapper,
-            UserRepository userRepository) {
+            ModelMapper mapper) {
         this.artistRepository = artistRepository;
         this.musicService = musicService;
         this.mapper = mapper;
-        this.userRepository = userRepository;
     }
 
     /**
@@ -61,30 +59,19 @@ public class ArtistsService {
         return artists;
     }
 
-
-    public Optional<Artist> saveFavoriteArtist(Long amgArtistId, Long userId) {
+    public Optional<Artist> findArtist(Long amgArtistId) {
         Optional<Artist> foundArtist = this.artistRepository.findById(amgArtistId);
         if (foundArtist.isEmpty()) {
             Optional<Result> searchedArtist = this.musicService.findArtistsByAmgArtistId(amgArtistId);
             if (searchedArtist.isEmpty() || searchedArtist.get().getAmgArtistId() == null) {
                 return Optional.empty();
             } else {
-                foundArtist = Optional.of(mapAndSaveArtist(searchedArtist.get()));
+                return Optional.of(mapAndSaveArtist(searchedArtist.get()));
             }
-        }
-
-        Optional<User> foundUser = this.userRepository.findById(userId);
-        if (foundUser.isPresent()) {
-            foundUser.get().setFavoriteArtist(foundArtist.get());
-            this.userRepository.save(foundUser.get());
-        } else {
-            User user = new User();
-            user.setId(userId);
-            user.setFavoriteArtist(foundArtist.get());
-            this.userRepository.save(user);
         }
         return foundArtist;
     }
+
 
     private Artist mapAndSaveArtist(Result searchResult) {
         return this.artistRepository.save(

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Api(value = "Artist")
-@RequestMapping("artist")
+@RequestMapping("artists")
 public interface ArtistsApi {
 
 //    @ApiOperation(value = "Get all artists", nickname = "getArtists", notes = "", tags = {
@@ -56,27 +56,27 @@ public interface ArtistsApi {
 //    #FIXME expecting swagger doc show more info
 //    #FIXME validate search term
 
-    @ApiOperation(value = "Save artist as a favorite", nickname = "saveFavoriteArtist", notes = "", tags = {
-            "Artists"})
-    @ApiResponses(value = {
-            @ApiResponse(
-                    code = 201,
-                    message = "Artist was saved as a favorite",
-                    response = Artist.class),
-            @ApiResponse(
-                    code = 404,
-                    message = "Artist with provided id doesn't exist"),
-            @ApiResponse(
-                    code = 500,
-                    message = "Internal server error")})
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    #FIXME check how requestheader looks in swagger
-//    #FIXME validate x-user-id header?
-    ResponseEntity<Artist> saveFavoriteArtist(
-            @RequestHeader("x-user-id") Long userId,
-            @Parameter(description = "AMG Artist id")
-            @RequestParam(value="amgArtistId", required = true) Long amgArtistId
-    );
+//    @ApiOperation(value = "Save artist as a favorite", nickname = "saveFavoriteArtist", notes = "", tags = {
+//            "Artists"})
+//    @ApiResponses(value = {
+//            @ApiResponse(
+//                    code = 201,
+//                    message = "Artist was saved as a favorite",
+//                    response = Artist.class),
+//            @ApiResponse(
+//                    code = 404,
+//                    message = "Artist with provided id doesn't exist"),
+//            @ApiResponse(
+//                    code = 500,
+//                    message = "Internal server error")})
+//    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+////    #FIXME check how requestheader looks in swagger
+////    #FIXME validate x-user-id header?
+//    ResponseEntity<Artist> saveFavoriteArtist(
+//            @RequestHeader("x-user-id") Long userId,
+//            @Parameter(description = "AMG Artist id")
+//            @RequestParam(value="amgArtistId", required = true) Long amgArtistId
+//    );
 
 //    #FIXME what when user want's to check his favorite artist?
 
