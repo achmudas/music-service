@@ -4,9 +4,11 @@ import com.music.models.internal.Artist;
 import com.music.models.internal.User;
 import com.music.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class UsersService {
 
     private UserRepository userRepository;
