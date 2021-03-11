@@ -1,8 +1,9 @@
-package com.music.services;
+package com.music.services.integrations;
 
-import com.music.models.api.Result;
+import com.music.models.external.Result;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MusicService {
 
@@ -10,8 +11,11 @@ public interface MusicService {
      * Connects to music service and searches for possible artists
      * with given artist name
      * @param artistName
-     * @return
+     * @return list of possible artists with similar names
      */
     List<Result> findArtistsByArtistName(String artistName);
+
+
+    Optional<Result> findArtistsByAmgArtistId(Long artistId);
 
 }

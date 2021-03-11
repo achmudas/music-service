@@ -1,4 +1,4 @@
-package com.music.services;
+package com.music.services.integrations;
 
 import org.junit.jupiter.api.Test;
 

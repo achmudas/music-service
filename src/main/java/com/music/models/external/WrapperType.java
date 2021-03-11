@@ -1,4 +1,4 @@
-package com.music.models.api;
+package com.music.models.external;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

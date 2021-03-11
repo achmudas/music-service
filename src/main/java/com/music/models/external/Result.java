@@ -1,4 +1,4 @@
-package com.music.models.api;
+package com.music.models.external;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +9,6 @@ public class Result {
 
         private WrapperType wrapperType;
         private String artistName;
-        private String artistId;
+        private Long amgArtistId;
 
 }

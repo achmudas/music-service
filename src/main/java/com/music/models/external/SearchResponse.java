@@ -1,4 +1,4 @@
-package com.music.models.api;
+package com.music.models.external;
 
 import lombok.Getter;
 import lombok.Setter;

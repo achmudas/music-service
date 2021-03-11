@@ -1,7 +1,7 @@
-package com.music.services;
+package com.music.services.integrations;
 
-import com.music.models.api.Result;
-import com.music.models.api.SearchResponse;
+import com.music.models.external.Result;
+import com.music.models.external.SearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ItunesService implements MusicService{
@@ -38,7 +39,6 @@ public class ItunesService implements MusicService{
     public List<Result> findArtistsByArtistName(String artistName) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.valueOf("text/javascript;charset=utf-8")));
-//        headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
 
         URI uri = UriComponentsBuilder.fromHttpUrl(itunesServiceUrl)
                 .pathSegment("search")
@@ -55,5 +55,28 @@ public class ItunesService implements MusicService{
 
         List<Result> results = response.getBody().getResults();
         return results;
+    }
+
+    @Override
+    public Optional<Result> findArtistsByAmgArtistId(Long artistId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.valueOf("text/javascript;charset=utf-8")));
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(itunesServiceUrl)
+                .pathSegment("lookup")
+                .queryParam("amgArtistId", "{amgArtistId}")
+                .build(artistId);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        logger.info("Searching for artist with id: {}, url: {}", artistId, uri.toString());
+
+        HttpEntity<SearchResponse> response =
+                restTemplate.exchange(uri, HttpMethod.GET, entity, SearchResponse.class);
+        logger.info("Response retrieved: {}", response);
+
+        List<Result> results = response.getBody().getResults();
+        return results.isEmpty() ?
+                Optional.empty() :
+                Optional.of(results.get(0));
     }
 }
