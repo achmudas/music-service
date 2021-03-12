@@ -2,7 +2,6 @@ package com.music.services;
 
 import com.music.models.external.Result;
 import com.music.models.internal.Artist;
-import com.music.models.internal.User;
 import com.music.repositories.ArtistRepository;
 import com.music.repositories.UserRepository;
 import com.music.services.integrations.MusicService;
@@ -46,7 +45,7 @@ public class ArtistsService {
 //    #FIXME the case when some artists with similar name exists, but there is the one which is actually
 //    searched. Need to find exact by name only single in this case?
     public List<Artist> findArtists(String artistName) {
-        Optional<Artist> foundArtist = this.artistRepository.findByNameIgnoreCase(artistName);
+        Optional<Artist> foundArtist = this.artistRepository.findByArtistNameIgnoreCase(artistName);
         if (foundArtist.isPresent()) {
             return Arrays.asList(foundArtist.get());
         }

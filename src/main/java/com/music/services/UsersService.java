@@ -39,4 +39,12 @@ public class UsersService {
         }
         return foundArtist;
     }
+
+    public Optional<Artist> getUsersFavoriteArtist(Long userId) {
+        Optional<User> user = this.userRepository.findById(userId);
+        if (user.isPresent() && user.get().getFavoriteArtist() != null) {
+            return Optional.of(user.get().getFavoriteArtist());
+        }
+        return Optional.empty();
+    }
 }

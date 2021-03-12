@@ -3,20 +3,19 @@ package com.music.models.external;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum WrapperType {
+public enum CollectionType {
 
-    ARTIST("artist"),
-    COLLECTION("collection");
+    ALBUM("Album");
 
     private final String value;
 
-    WrapperType(String value) {
+    CollectionType(String value) {
         this.value = value;
     }
 
     @JsonCreator
-    public static WrapperType fromString(String value) {
-        return value == null ? null : WrapperType.valueOf(value.toUpperCase());
+    public static CollectionType fromString(String value) {
+        return value == null ? null : CollectionType.valueOf(value.toUpperCase());
     }
 
     @JsonValue

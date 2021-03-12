@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface ArtistRepository extends PagingAndSortingRepository<Artist, Long> {
 
-    Optional<Artist> findByNameIgnoreCase(String artistName);
+    Optional<Artist> findByArtistNameIgnoreCase(String artistName);
 }

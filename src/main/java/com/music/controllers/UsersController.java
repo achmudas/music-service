@@ -29,4 +29,17 @@ public class UsersController implements UsersApi {
                 new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
 //        #FIXME need to think about particular error messages
     }
+
+    @Override
+    public ResponseEntity<Artist> getFavoriteArtist(Long userId) {
+        Optional<Artist> favoritedArtist = this.usersService.getUsersFavoriteArtist(userId);
+        return (favoritedArtist.isPresent()) ?
+                new ResponseEntity<>(favoritedArtist.get(), null, HttpStatus.OK) :
+                new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public ResponseEntity<Artist> getFavoriteArtistTopAlbums(Long userId) {
+        return null;
+    }
 }

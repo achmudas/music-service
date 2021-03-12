@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Entity
 @Setter
@@ -17,9 +18,13 @@ public class Artist {
 
     @Column(length = 250)
     @NotBlank
-    private String name;
+    private String artistName;
 
     @Enumerated(EnumType.STRING)
     private WrapperType wrapperType;
+
+    @OneToMany
+    @JoinColumn(referencedColumnName="amgArtistId")
+    private List<Album> albums;
 
 }
