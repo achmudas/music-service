@@ -11,10 +11,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -47,14 +50,15 @@ public class ItunesService implements MusicService{
                 .build("allArtist", artistName);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
-        logger.info("Searching for artists: {}, url: {}", entity, uri.toString());
+        logger.info("Searching for artists: {}, url: {}", entity, uri);
 
         HttpEntity<SearchResponse> response =
                 restTemplate.exchange(uri, HttpMethod.POST, entity, SearchResponse.class);
         logger.info("Response retrieved: {}", response);
 
-        List<Result> results = response.getBody().getResults();
-        return results;
+        return (response.getBody() == null || response.getBody().getResults() == null) ?
+                new ArrayList<>() :
+                response.getBody().getResults();
     }
 
     @Override
@@ -68,15 +72,41 @@ public class ItunesService implements MusicService{
                 .build(artistId);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
-        logger.info("Searching for artist with id: {}, url: {}", artistId, uri.toString());
+        logger.info("Searching for artist with id: {}, url: {}", artistId, uri);
 
         HttpEntity<SearchResponse> response =
                 restTemplate.exchange(uri, HttpMethod.GET, entity, SearchResponse.class);
         logger.info("Response retrieved: {}", response);
 
-        List<Result> results = response.getBody().getResults();
-        return results.isEmpty() ?
+        return response.getBody() == null ||
+                CollectionUtils.isEmpty(response.getBody().getResults()) ?
                 Optional.empty() :
-                Optional.of(results.get(0));
+                Optional.of(response.getBody().getResults().get(0));
+    }
+
+    @Override
+    public List<Result> retrieveAlbumsForArtist(List<Long> amgArtistIds) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.valueOf("text/javascript;charset=utf-8")));
+
+        String listOfAmgArtistIds = StringUtils.collectionToCommaDelimitedString(amgArtistIds);
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(itunesServiceUrl)
+                .pathSegment("lookup")
+                .queryParam("amgArtistId", "{amgArtistIds}")
+                .queryParam("entity", "{entity}")
+                .queryParam("limit", "{limit}")
+                .build(listOfAmgArtistIds, "album", 5);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        logger.info("Retrieving albums for artists with ids: {}, url: {}", listOfAmgArtistIds, uri);
+
+        HttpEntity<SearchResponse> response =
+                restTemplate.exchange(uri, HttpMethod.POST, entity, SearchResponse.class);
+        logger.info("Response retrieved: {}", response);
+
+        return response.getBody() == null || response.getBody().getResults() == null ?
+                new ArrayList<>() :
+                response.getBody().getResults();
     }
 }

@@ -3,16 +3,18 @@ package com.music.services;
 import com.music.models.external.Result;
 import com.music.models.internal.Artist;
 import com.music.repositories.ArtistRepository;
-import com.music.repositories.UserRepository;
 import com.music.services.integrations.MusicService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ArtistsService {
@@ -20,10 +22,9 @@ public class ArtistsService {
     private ArtistRepository artistRepository;
     private MusicService musicService;
     private ModelMapper mapper;
-//    #FIXME move to separate service
-    private UserRepository userRepository;
 
 //    #FIXME need to go through all classes and make autowired in constructor
+//    #FIXME add more logging
 
     @Autowired
     public ArtistsService(
@@ -70,6 +71,15 @@ public class ArtistsService {
             }
         }
         return foundArtist;
+    }
+
+    public Page<Artist> getAllArtists(int page, int size) {
+        Pageable pageRequest = PageRequest.of(page, size);
+        return this.artistRepository.findAll(pageRequest);
+    }
+
+    public Artist updateArtist(Artist artist) {
+        return this.artistRepository.save(artist);
     }
 
 

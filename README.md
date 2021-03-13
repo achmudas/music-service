@@ -4,3 +4,4 @@
 # music-service
 
 #FIXME add documentation, description, how to launch, etc.
+#FIXME documentation in API, interfaces, services

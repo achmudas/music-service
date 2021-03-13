@@ -16,6 +16,8 @@ public interface MusicService {
     List<Result> findArtistsByArtistName(String artistName);
 
 
-    Optional<Result> findArtistsByAmgArtistId(Long artistId);
+    Optional<Result> findArtistsByAmgArtistId(Long amgArtistId);
+
+    List<Result> retrieveAlbumsForArtist(List<Long> amgArtistIds);
 
 }

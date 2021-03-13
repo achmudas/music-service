@@ -13,7 +13,7 @@ import java.util.Date;
 public class Album {
 
     @Id
-    private Long albumId;
+    private Long collectionId;
 
     @Column(length = 250)
     @NotBlank
@@ -29,5 +29,8 @@ public class Album {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date releaseDate;
+
+    @Transient
+    private Long amgArtistId;
 
 }
