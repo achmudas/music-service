@@ -1,84 +1,102 @@
 package com.music.api;
 
-import com.music.models.internal.Album;
-import com.music.models.internal.Artist;
-import io.swagger.annotations.*;
+import com.music.models.api.AlbumDTO;
+import com.music.models.api.ArtistDTO;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@Api(value = "Artist")
 @RequestMapping("artists")
 public interface ArtistsApi {
 
-    @ApiOperation(value = "Find all artists by name", nickname = "getArtists", notes = "", tags = {
-            "Artists"})
+    @Operation(summary = "Find all artists by name")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
-                    message = "Artists were successfully found",
-                    response = Artist.class,
-                    responseContainer = "List"),
+                    responseCode = "200",
+                    description = "Artists were successfully found",
+                    content = {@Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(
+                                    schema = @Schema(implementation = ArtistDTO.class))) }),
             @ApiResponse(
-                    code = 404,
-                    message = "No artists were found according search term",
-                    responseContainer = "List"),
+                    responseCode = "404",
+                    description = "No artists were found according search term",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema)),
             @ApiResponse(
-                    code = 500,
-                    message = "Internal server error")})
+                    responseCode = "500",
+                    description = "Internal server error")
+    })
     @GetMapping(value="/{artistName}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<Artist>> findArtists(
+    ResponseEntity<List<ArtistDTO>> findArtists(
             @Parameter(description = "Artist name")
             @RequestParam(value="artistName", required = true) String artistName
     );
     //    #FIXME validate search term
 
-    @ApiOperation(value = "Find artist by amgArtistId", nickname = "getArtist", notes = "", tags = {
-            "Artists"})
+    @Operation(summary = "Find artist by amgArtistId")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
-                    message = "Artist was successfully retrieved",
-                    response = Artist.class),
+                    responseCode = "200",
+                    description = "Artists was successfully found",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ArtistDTO.class)) }),
             @ApiResponse(
-                    code = 404,
-                    message = "Artists was not found according amgArtistId",
-                    responseContainer = "List"),
+                    responseCode = "404",
+                    description = "Artist was found according search term",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            schema = @Schema()) }),
             @ApiResponse(
-                    code = 500,
-                    message = "Internal server error")})
+                    responseCode = "500",
+                    description = "Internal server error")
+    })
     @GetMapping(value="/{amgArtistId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<Artist>> getArtist(
-            @ApiParam(value = "Artist AMG Id", required = true)
+    ResponseEntity<ArtistDTO> getArtist(
+            @Parameter(description = "Artist AMG Id", required = true)
             @PathVariable("amgArtistId") Long amgArtistId
     );
 
-    @ApiOperation(value = "Get favorite albums for artist", nickname = "getFavoriteAlbums", notes = "", tags = {
-            "Artists"})
+    @Operation(summary = "Get favorite albums for artist")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
-                    message = "Favorite albums were successfully retrieved",
-                    response = Album.class,
-                    responseContainer = "List"),
+                    responseCode = "200",
+                    description = "Favorite albums were successfully retrieved",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = AlbumDTO.class))) }),
             @ApiResponse(
-                    code = 404,
-                    message = "Artist was not found according amgArtistId and/or artist doesn't have any album",
-                    responseContainer = "List"),
+                    responseCode = "404",
+                    description = "Artist was not found according amgArtistId and/or artist doesn't have any album",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema())) }),
             @ApiResponse(
-                    code = 500,
-                    message = "Internal server error")})
+                    responseCode = "500",
+                    description = "Internal server error")
+    })
     @GetMapping(value="/{amgArtistId}/albums", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<Album>> getFavoriteAlbums(
-            @ApiParam(value = "Artist AMG Id", required = true)
+    ResponseEntity<List<AlbumDTO>> getFavoriteAlbums(
+            @Parameter(description = "Artist AMG Id", required = true)
             @PathVariable("amgArtistId") Long amgArtistId
     );
 
-//    #FIXME expecting swagger doc show more info
+//    #FIXME show empty lists
 
-//    #FIXME do we really need specific endpoints for albums?
-//    probably will need to map to specific entities for API
 }

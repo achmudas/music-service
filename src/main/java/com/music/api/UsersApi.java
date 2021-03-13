@@ -1,7 +1,14 @@
 package com.music.api;
 
-import com.music.models.internal.Artist;
-import io.swagger.annotations.*;
+import com.music.models.api.AlbumDTO;
+import com.music.models.api.ArtistDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,66 +16,84 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Api(value = "Users")
+import java.util.List;
+
 @RequestMapping("users")
 public interface UsersApi {
 
-    @ApiOperation(value = "Save artist as a favorite for a user", nickname = "saveFavoriteArtist", notes = "", tags = {
-            "Users"})
+    @Operation(summary = "Save artist as a favorite for a user")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 201,
-                    message = "Artist was saved as a favorite",
-                    response = Artist.class),
+                    responseCode = "201",
+                    description = "Artist was saved as a favorite",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ArtistDTO.class)) }),
             @ApiResponse(
-                    code = 404,
-                    message = "Artist with provided id doesn't exist"),
+                    responseCode = "404",
+                    description = "Artist with provided id doesn't exist",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            schema = @Schema()) }),
             @ApiResponse(
-                    code = 500,
-                    message = "Internal server error")})
+                    responseCode = "500",
+                    description = "Internal server error")
+    })
     @PostMapping(value="/{userId}/artists/{amgArtistId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Artist> saveFavoriteArtist(
-            @ApiParam(value = "User ID", required = true)
+    ResponseEntity<ArtistDTO> saveFavoriteArtist(
+            @Parameter(description = "User ID", required = true)
             @PathVariable("userId") Long userId,
-            @ApiParam(value = "AMG Artist id", required = true)
+            @Parameter(description = "AMG Artist id", required = true)
             @PathVariable(value="amgArtistId", required = true) Long amgArtistId
     );
 
-    @ApiOperation(value = "Get favorite artist for user", nickname = "getFavoriteArtist", notes = "", tags = {
-            "Users"})
+    @Operation(summary = "Get favorite artist for user")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
-                    message = "Favorite artist was retrieved",
-                    response = Artist.class),
+                    responseCode = "200",
+                    description = "Artist was saved as a favorite",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ArtistDTO.class)) }),
             @ApiResponse(
-                    code = 404,
-                    message = "User with provided id doesn't exist or it doesn't have favorite artist set"),
+                    responseCode = "404",
+                    description = "User with provided id doesn't exist or it doesn't have favorite artist set",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            schema = @Schema()) }),
             @ApiResponse(
-                    code = 500,
-                    message = "Internal server error")})
+                    responseCode = "500",
+                    description = "Internal server error")
+    })
     @GetMapping(value="/{userId}/artists" ,produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Artist> getFavoriteArtist(
-            @ApiParam(value = "User ID", required = true)
+    ResponseEntity<ArtistDTO> getFavoriteArtist(
+            @Parameter(description = "User ID", required = true)
             @PathVariable("userId") Long userId
     );
 
-    @ApiOperation(value = "Get user's favorite artist's top albums", nickname = "getFavoriteArtistTopAlbums", notes = "", tags = {
-            "Users"})
+    @Operation(summary = "Get user's favorite artist's top albums")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 201,
-                    message = "Top albums were retrieved",
-                    response = Artist.class),
+                    responseCode = "200",
+                    description = "Top albums were retrieved",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = AlbumDTO.class))) }),
             @ApiResponse(
-                    code = 404,
-                    message = "User with provided id doesn't exist or it doesn't have favorite artist set"),
+                    responseCode = "404",
+                    description = "User with provided id doesn't exist or it doesn't have favorite artist set",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema())) }),
             @ApiResponse(
-                    code = 500,
-                    message = "Internal server error")})
+                    responseCode = "500",
+                    description = "Internal server error")
+    })
     @GetMapping(value="/{userId}/artists/albums" ,produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Artist> getFavoriteArtistTopAlbums(
-            @ApiParam(value = "User ID", required = true)
+    ResponseEntity<List<AlbumDTO>> getFavoriteArtistTopAlbums(
+            @Parameter(description = "User ID", required = true)
             @PathVariable("userId") Long userId
     );
 
