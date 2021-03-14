@@ -27,7 +27,7 @@ public class Album {
     @NotBlank
     private String artistName;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date releaseDate;
 
     @Transient

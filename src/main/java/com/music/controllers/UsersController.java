@@ -32,9 +32,7 @@ public class UsersController implements UsersApi {
 
     @Override
     public ResponseEntity<ArtistDTO> saveFavoriteArtist(Long userId, Long amgArtistId) {
-        //    #FIXME check if user id is provided
         Optional<Artist> favoritedArtist = this.usersService.saveFavoriteArtist(amgArtistId, userId);
-
         return (favoritedArtist.isPresent()) ?
                 new ResponseEntity<>(mapper.map(favoritedArtist.get(), ArtistDTO.class), null, HttpStatus.OK) :
                 new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);

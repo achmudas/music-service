@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @RequestMapping("artists")
@@ -35,6 +36,10 @@ public interface ArtistsApi {
                     description = "No artists were found according search term",
                     content = {@Content() }),
             @ApiResponse(
+                    responseCode = "400",
+                    description = "If not valid search term is provided",
+                    content = {@Content() }),
+            @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error",
                     content = {@Content() })
@@ -42,9 +47,9 @@ public interface ArtistsApi {
     @GetMapping(value="/{artistName}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<ArtistDTO>> findArtists(
             @Parameter(description = "Artist name")
+            @Pattern(regexp = "^[A-Za-z0-9 ]*$")
             @RequestParam(value="artistName", required = true) String artistName
     );
-    //    #FIXME validate search term
 
     @Operation(summary = "Find artist by amgArtistId")
     @ApiResponses(value = {
