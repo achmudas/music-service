@@ -57,7 +57,7 @@ public class ItunesService implements MusicService{
 
         HttpEntity<SearchResponse> response =
                 restTemplate.exchange(uri, HttpMethod.POST, entity, SearchResponse.class);
-        logger.info("Response retrieved: {}", response);
+        logger.info(RESPONSE_RETRIEVED, response);
 
         return (response.getBody() != null && response.getBody().getResults() != null) ?
                 response.getBody().getResults() :
@@ -79,7 +79,7 @@ public class ItunesService implements MusicService{
 
         HttpEntity<SearchResponse> response =
                 restTemplate.exchange(uri, HttpMethod.GET, entity, SearchResponse.class);
-        logger.info("Response retrieved: {}", response);
+        logger.info(RESPONSE_RETRIEVED, response);
 
         return response.getBody() != null &&
                 !CollectionUtils.isEmpty(response.getBody().getResults()) ?

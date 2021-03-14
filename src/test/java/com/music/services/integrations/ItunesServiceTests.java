@@ -37,7 +37,7 @@ class ItunesServiceTests {
     }
 
     @Test
-    public void testSearchQueryParamIsEncoded() {
+    void testSearchQueryParamIsEncoded() {
         String searchResponse = "{\n" +
                 " \"resultCount\":0,\n" +
                 " \"results\": []\n" +
