@@ -52,11 +52,10 @@ public class ArtistsService {
         }
 
         List<Result> results = this.musicService.findArtistsByArtistName(artistName);
-        List<Artist> artists = results.stream()
+        return results.stream()
                 .filter(result -> result.getAmgArtistId() != null)
                 .map(result -> mapAndSaveArtist(result))
                 .collect(Collectors.toList());
-        return artists;
     }
 
     /**

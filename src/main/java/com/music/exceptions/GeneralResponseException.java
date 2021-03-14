@@ -2,7 +2,7 @@ package com.music.exceptions;
 
 public class GeneralResponseException extends RuntimeException{
 
-    private String message;
+    private final String message;
 
     public GeneralResponseException(Exception ex, String message) {
         super(ex);

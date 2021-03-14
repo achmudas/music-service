@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ArtistsServiceTests {
+class ArtistsServiceTests {
 
     private ArtistsService artistsService;
 
@@ -48,7 +48,7 @@ public class ArtistsServiceTests {
     }
 
     @Test
-    public void testWhenResultIsFilteredIfNoAmgId() {
+    void testWhenResultIsFilteredIfNoAmgId() {
         String artistName = "non-existing-name";
         when(this.artistRepository.findByArtistNameIgnoreCase(artistName)).thenReturn(Optional.empty());
         when(this.artistRepository.save(any(Artist.class))).then(invocation ->
@@ -95,7 +95,7 @@ public class ArtistsServiceTests {
         when(this.artistRepository.findById(amgArtistId)).thenReturn(Optional.empty());
         when(this.musicService.findArtistsByAmgArtistId(amgArtistId)).thenReturn(Optional.empty());
         Optional<Artist> foundArtist = this.artistsService.findArtist(amgArtistId);
-        assertThat(foundArtist.isPresent()).isFalse();
+        assertThat(foundArtist).isNotPresent();
         verify(this.musicService, times(1)).findArtistsByAmgArtistId(any(Long.class));
     }
 }

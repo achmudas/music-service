@@ -20,7 +20,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withUnauthorizedRequest;
 
 @SpringBootTest
-public class ItunesServiceTests {
+class ItunesServiceTests {
 
     @Autowired
     private ItunesService musicService;
@@ -38,11 +38,21 @@ public class ItunesServiceTests {
 
     @Test
     public void testSearchQueryParamIsEncoded() {
+        String searchResponse = "{\n" +
+                " \"resultCount\":0,\n" +
+                " \"results\": []\n" +
+                "}";
 
+        this.server.expect(requestTo("http://localhost:8080/search?entity=allArtist&term=ala%20baba"))
+                .andRespond(withSuccess(searchResponse, MediaType.APPLICATION_JSON));
+
+        List<Result> result = this.musicService.findArtistsByArtistName("ala baba");
+        assertThat(result.isEmpty()).isTrue();
+        this.server.verify();
     }
 
     @Test
-    public void testWhenNothingIsReturned() {
+    void testWhenNothingIsReturned() {
         String searchResponse = "";
 
         this.server.expect(requestTo("http://localhost:8080/search?entity=allArtist&term=erererer"))
@@ -54,7 +64,7 @@ public class ItunesServiceTests {
     }
 
     @Test
-    public void testWhenEmptyResultIsReturned() {
+    void testWhenEmptyResultIsReturned() {
         String searchResponse = "{\n" +
                 " \"resultCount\":0,\n" +
                 " \"results\": []\n" +

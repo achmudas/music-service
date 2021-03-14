@@ -70,10 +70,9 @@ public class AlbumsUpdater {
     }
 
     private List<Long> getArtistIdsForCheckingAlbums(Page<Artist> pageableResult) {
-        List<Long> amgArtistIds = pageableResult.getContent().stream()
+        return pageableResult.getContent().stream()
                 .map(Artist::getAmgArtistId)
                 .collect(Collectors.toList());
-        return amgArtistIds;
     }
 
     private void updateListOfAlbumsForArtists(Map<Long, List<Album>> albums) {

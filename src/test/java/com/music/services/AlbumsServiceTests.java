@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AlbumsServiceTests {
+class AlbumsServiceTests {
 
     private AlbumsService albumsService;
 

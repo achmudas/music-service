@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTests {
+class UserServiceTests {
 
     private UsersService service;
 
@@ -43,7 +43,7 @@ public class UserServiceTests {
         when(this.artistsService.findArtist(55555L)).thenReturn(Optional.empty());
         Optional<Artist> favoritedArtist = this.service.saveFavoriteArtist(amgArtistId, userId);
         verify(this.userRepository, times(0)).save(userCaptor.capture());
-        assertThat(favoritedArtist.isEmpty()).isTrue();
+        assertThat(favoritedArtist).isNotPresent();
     }
 
     @Test
@@ -104,7 +104,7 @@ public class UserServiceTests {
         when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
         Optional<Artist> favoritedArtist = this.service.getUsersFavoriteArtist(userId);
         verify(this.userRepository, times(1)).findById(anyLong());
-        assertThat(favoritedArtist.isEmpty()).isTrue();
+        assertThat(favoritedArtist).isNotPresent();
     }
 
     @Test
@@ -113,7 +113,7 @@ public class UserServiceTests {
         Long userId = 2323L;
         when(this.artistsService.findArtist(55555L)).thenReturn(Optional.empty());
         Optional<Artist> favoritedArtist = this.service.saveFavoriteArtist(amgArtistId, userId);
-        assertThat(favoritedArtist.isEmpty()).isTrue();
+        assertThat(favoritedArtist).isNotPresent();
         verify(this.userRepository, times(0)).findById(any(Long.class));
     }
 }

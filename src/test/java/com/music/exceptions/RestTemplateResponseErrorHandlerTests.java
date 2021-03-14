@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class RestTemplateResponseErrorHandlerTests {
+class RestTemplateResponseErrorHandlerTests {
 
     private RestTemplateResponseErrorHandler handler;
 

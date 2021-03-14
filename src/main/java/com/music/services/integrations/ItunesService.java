@@ -25,6 +25,9 @@ import java.util.Optional;
 @Service
 public class ItunesService implements MusicService{
 
+    public static final MediaType MEDIA_TYPE = MediaType.valueOf("text/javascript;charset=utf-8");
+    public static final String RESPONSE_RETRIEVED = "Response retrieved: {}";
+
     @Value("${itunes.service.url}")
     private String itunesServiceUrl;
 
@@ -41,7 +44,7 @@ public class ItunesService implements MusicService{
     @Override
     public List<Result> findArtistsByArtistName(String artistName) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.valueOf("text/javascript;charset=utf-8")));
+        headers.setAccept(Arrays.asList(MEDIA_TYPE));
 
         URI uri = UriComponentsBuilder.fromHttpUrl(itunesServiceUrl)
                 .pathSegment("search")
@@ -64,7 +67,7 @@ public class ItunesService implements MusicService{
     @Override
     public Optional<Result> findArtistsByAmgArtistId(Long artistId) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.valueOf("text/javascript;charset=utf-8")));
+        headers.setAccept(Arrays.asList(MEDIA_TYPE));
 
         URI uri = UriComponentsBuilder.fromHttpUrl(itunesServiceUrl)
                 .pathSegment("lookup")
@@ -87,7 +90,7 @@ public class ItunesService implements MusicService{
     @Override
     public List<Result> retrieveAlbumsForArtist(List<Long> amgArtistIds) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.valueOf("text/javascript;charset=utf-8")));
+        headers.setAccept(Arrays.asList(MEDIA_TYPE));
 
         String listOfAmgArtistIds = StringUtils.collectionToCommaDelimitedString(amgArtistIds);
 
@@ -103,7 +106,7 @@ public class ItunesService implements MusicService{
 
         HttpEntity<SearchResponse> response =
                 restTemplate.exchange(uri, HttpMethod.POST, entity, SearchResponse.class);
-        logger.info("Response retrieved: {}", response);
+        logger.info(RESPONSE_RETRIEVED, response);
 
         return response.getBody() != null && response.getBody().getResults() != null ?
                 response.getBody().getResults() :
