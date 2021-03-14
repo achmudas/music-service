@@ -33,12 +33,11 @@ public interface ArtistsApi {
             @ApiResponse(
                     responseCode = "404",
                     description = "No artists were found according search term",
-                    content = @Content(
-                            mediaType = "application/json",
-                            array = @ArraySchema)),
+                    content = {@Content() }),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal server error")
+                    description = "Internal server error",
+                    content = {@Content() })
     })
     @GetMapping(value="/{artistName}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<ArtistDTO>> findArtists(
@@ -51,19 +50,18 @@ public interface ArtistsApi {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Artists was successfully found",
+                    description = "Artist was successfully found",
                     content = {@Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ArtistDTO.class)) }),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Artist was found according search term",
-                    content = {@Content(
-                            mediaType = "application/json",
-                            schema = @Schema()) }),
+                    description = "Artist was not found according id",
+                    content = {@Content() }),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal server error")
+                    description = "Internal server error",
+                    content = {@Content() })
     })
     @GetMapping(value="/{amgArtistId}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ArtistDTO> getArtist(
@@ -83,20 +81,15 @@ public interface ArtistsApi {
             @ApiResponse(
                     responseCode = "404",
                     description = "Artist was not found according amgArtistId and/or artist doesn't have any album",
-                    content = {@Content(
-                            mediaType = "application/json",
-                            array = @ArraySchema(
-                                    schema = @Schema())) }),
+                    content = {@Content() }),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal server error")
+                    description = "Internal server error",
+                    content = {@Content() })
     })
     @GetMapping(value="/{amgArtistId}/albums", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<AlbumDTO>> getFavoriteAlbums(
             @Parameter(description = "Artist AMG Id", required = true)
             @PathVariable("amgArtistId") Long amgArtistId
     );
-
-//    #FIXME show empty lists
-
 }
