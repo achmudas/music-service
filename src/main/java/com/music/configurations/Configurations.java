@@ -1,5 +1,6 @@
 package com.music.configurations;
 
+import com.music.exceptions.RestTemplateResponseErrorHandler;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +17,11 @@ import java.util.Collection;
 public class Configurations {
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    public RestTemplate restTemplate(RestTemplateBuilder builder,
+                                     RestTemplateResponseErrorHandler errorHandler) {
         return builder
                 .additionalMessageConverters(getMessageConverter())
-//				.errorHandler(errorHandler) #FIXME add error handler
+				.errorHandler(errorHandler)
                 .build();
     }
 
@@ -32,8 +34,12 @@ public class Configurations {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
-//        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return mapper;
+    }
+
+    @Bean
+    public RestTemplateResponseErrorHandler errorHandler() {
+        return new RestTemplateResponseErrorHandler();
     }
 
 }

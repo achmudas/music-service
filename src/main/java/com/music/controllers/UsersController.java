@@ -36,7 +36,6 @@ public class UsersController implements UsersApi {
         return (favoritedArtist.isPresent()) ?
                 new ResponseEntity<>(mapper.map(favoritedArtist.get(), ArtistDTO.class), null, HttpStatus.OK) :
                 new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
-//        #FIXME need to think about particular error messages
     }
 
     @Override

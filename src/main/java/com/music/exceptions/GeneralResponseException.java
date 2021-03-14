@@ -1,4 +1,4 @@
-package com.ibm.acoustic.content.manager.exceptions;
+package com.music.exceptions;
 
 public class GeneralResponseException extends RuntimeException{
 

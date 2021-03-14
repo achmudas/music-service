@@ -3,5 +3,20 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=achmudas_music-service&metric=coverage)](https://sonarcloud.io/dashboard?id=achmudas_music-service)
 # music-service
 
-#FIXME add documentation, description, how to launch, etc.
-#FIXME documentation in API, interfaces, services
+Service to search and store users favorite artist. Also top 5 albums are retrieved and stored for 
+each artist.
+
+### Launching with docker
+#### Prereqs
+* Java 11
+* Docker
+
+#### Build and launch
+```bash
+./mvnw clean install
+docker build -t music-service:latest .
+docker run -p 8080:8080 music-service:latest 
+```
+
+#### Access API
+http://localhost:8080/swagger-ui.html

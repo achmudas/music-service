@@ -24,6 +24,7 @@ public class ArtistsService {
     private ModelMapper mapper;
 
 //    #FIXME add more logging
+//    #FIXME documentation in API, interfaces, services
 
     @Autowired
     public ArtistsService(
@@ -61,7 +62,6 @@ public class ArtistsService {
         Optional<Artist> foundArtist = this.artistRepository.findById(amgArtistId);
         if (foundArtist.isEmpty()) {
             Optional<Result> searchedArtist = this.musicService.findArtistsByAmgArtistId(amgArtistId);
-//            #FIXME not all normal artists have amg id, e.g. Bryan Adams
             if (searchedArtist.isEmpty() || searchedArtist.get().getAmgArtistId() == null) {
                 return Optional.empty();
             } else {
