@@ -37,6 +37,10 @@ public class AlbumsUpdater {
         this.albumsService = albumsService;
     }
 
+    /**
+     * Service is triggered daily to update albums for each artist in database. <br>
+     * To reduce number of calls music service is called in chunks - with 10 artists per one call.
+     */
     @PostConstruct
     @Scheduled(cron = "${albums.query.cron}")
     public void updateArtistsAlbums() {
@@ -62,6 +66,7 @@ public class AlbumsUpdater {
             pageableResult = this.artistsService.getAllArtists(pageable.getPageNumber(),
                     RESULT_SIZE);
         }
+        logger.info("Albums update was completed.");
     }
 
     private List<Long> getArtistIdsForCheckingAlbums(Page<Artist> pageableResult) {

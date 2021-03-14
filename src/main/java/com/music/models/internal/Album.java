@@ -2,14 +2,17 @@ package com.music.models.internal;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Setter
 @Getter
+@ToString
 public class Album {
 
     @Id
@@ -30,7 +33,9 @@ public class Album {
     @Temporal(TemporalType.DATE)
     private Date releaseDate;
 
-    @Transient
+    @Column
     private Long amgArtistId;
 
+    @ManyToMany(mappedBy = "albums")
+    private List<Artist> artists;
 }
