@@ -6,6 +6,8 @@ import com.music.models.api.ArtistDTO;
 import com.music.models.internal.Artist;
 import com.music.services.UsersService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 @RestController
 public class UsersController implements UsersApi {
 
+    private Logger logger = LoggerFactory.getLogger(UsersController.class);
+
     private UsersService usersService;
     private ModelMapper mapper;
 
@@ -32,18 +36,27 @@ public class UsersController implements UsersApi {
 
     @Override
     public ResponseEntity<ArtistDTO> saveFavoriteArtist(Long userId, Long amgArtistId) {
+        this.logger.info("Saving favorite artist: {} for user: {}", amgArtistId, userId);
         Optional<Artist> favoritedArtist = this.usersService.saveFavoriteArtist(amgArtistId, userId);
-        return (favoritedArtist.isPresent()) ?
-                new ResponseEntity<>(mapper.map(favoritedArtist.get(), ArtistDTO.class), null, HttpStatus.OK) :
-                new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+        if (favoritedArtist.isPresent()) {
+            ArtistDTO mappedArtist = mapper.map(favoritedArtist.get(), ArtistDTO.class);
+            this.logger.info("Following artist was favorited: {} for user: {}", mappedArtist, userId);
+            return new ResponseEntity<>(mappedArtist, null, HttpStatus.OK);
+        }
+        this.logger.info("No artist was favorited for user: {}, amgArtistId: {}", userId, amgArtistId);
+        return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
     }
 
     @Override
     public ResponseEntity<ArtistDTO> getFavoriteArtist(Long userId) {
         Optional<Artist> favoritedArtist = this.usersService.getUsersFavoriteArtist(userId);
-        return (favoritedArtist.isPresent()) ?
-                new ResponseEntity<>(mapper.map(favoritedArtist.get(), ArtistDTO.class), null, HttpStatus.OK) :
-                new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+        if (favoritedArtist.isPresent()) {
+            ArtistDTO mappedArtist = mapper.map(favoritedArtist.get(), ArtistDTO.class);
+            this.logger.info("Following artist {} is favorited for user: {}", mappedArtist, userId);
+            return new ResponseEntity<>(mappedArtist, null, HttpStatus.OK);
+        }
+        this.logger.info("No artist at the moment is favorited for user: {}", userId);
+        return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
     }
 
     @Override
@@ -53,8 +66,10 @@ public class UsersController implements UsersApi {
             List<AlbumDTO> albums = artist.get().getAlbums().stream()
                     .map(album -> mapper.map(album, AlbumDTO.class))
                     .collect(Collectors.toList());
+            this.logger.info("Following albums {} are top for users {} favorited artist: {}", albums, userId, artist);
             return new ResponseEntity<>(albums, null, HttpStatus.OK);
         }
+        this.logger.info("Either users: {} artist {} is not present or it doesn't have any albums", userId, artist);
         return new ResponseEntity<>(new ArrayList<>(), null, HttpStatus.NOT_FOUND);
     }
 }

@@ -39,11 +39,6 @@ public class ArtistsServiceTests {
     }
 
     @Test
-    public void testWhenResultIsEmptyCallingItunes() throws Exception{
-//        #FIXME
-    }
-
-    @Test
     void testWhenNoResultIsCalledEmptyListIsReturned() {
         String artistName = "non-existing-name";
         when(this.artistRepository.findByArtistNameIgnoreCase(artistName)).thenReturn(Optional.empty());

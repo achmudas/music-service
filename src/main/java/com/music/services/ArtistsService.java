@@ -26,8 +26,6 @@ public class ArtistsService {
     private MusicService musicService;
     private ModelMapper mapper;
 
-//    #FIXME add more logging
-
     @Autowired
     public ArtistsService(
             ArtistRepository artistRepository,
