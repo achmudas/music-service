@@ -15,7 +15,6 @@ public class Result {
         private CollectionType collectionType;
         private String collectionName;
         private String artworkUrl100;
-//        #FIXME check how works with date
         private Date releaseDate;
         private Long collectionId;
 }

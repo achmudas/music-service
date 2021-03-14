@@ -23,7 +23,6 @@ public class ArtistsService {
     private MusicService musicService;
     private ModelMapper mapper;
 
-//    #FIXME need to go through all classes and make autowired in constructor
 //    #FIXME add more logging
 
     @Autowired
@@ -39,12 +38,11 @@ public class ArtistsService {
     /**
      *
      * Calling music service and returning List of possible artists with similar name. <br>
+     * To reduce calls to iTunes service first exact match is checked in DB. <br>
+     * Search results also are saved to database for later usage.
      * @param artistName
      * @return List of artists with similar names
      */
-//    #FIXME think how to reduce calls to itunes service? Save to database all results from search
-//    #FIXME the case when some artists with similar name exists, but there is the one which is actually
-//    searched. Need to find exact by name only single in this case?
     public List<Artist> findArtists(String artistName) {
         Optional<Artist> foundArtist = this.artistRepository.findByArtistNameIgnoreCase(artistName);
         if (foundArtist.isPresent()) {
