@@ -56,9 +56,9 @@ public class ItunesService implements MusicService{
                 restTemplate.exchange(uri, HttpMethod.POST, entity, SearchResponse.class);
         logger.info("Response retrieved: {}", response);
 
-        return (response.getBody() == null || response.getBody().getResults() == null) ?
-                new ArrayList<>() :
-                response.getBody().getResults();
+        return (response.getBody() != null && response.getBody().getResults() != null) ?
+                response.getBody().getResults() :
+                new ArrayList<>();
     }
 
     @Override
@@ -78,10 +78,10 @@ public class ItunesService implements MusicService{
                 restTemplate.exchange(uri, HttpMethod.GET, entity, SearchResponse.class);
         logger.info("Response retrieved: {}", response);
 
-        return response.getBody() == null ||
-                CollectionUtils.isEmpty(response.getBody().getResults()) ?
-                Optional.empty() :
-                Optional.of(response.getBody().getResults().get(0));
+        return response.getBody() != null &&
+                !CollectionUtils.isEmpty(response.getBody().getResults()) ?
+                Optional.of(response.getBody().getResults().get(0)) :
+                Optional.empty();
     }
 
     @Override
@@ -105,8 +105,8 @@ public class ItunesService implements MusicService{
                 restTemplate.exchange(uri, HttpMethod.POST, entity, SearchResponse.class);
         logger.info("Response retrieved: {}", response);
 
-        return response.getBody() == null || response.getBody().getResults() == null ?
-                new ArrayList<>() :
-                response.getBody().getResults();
+        return response.getBody() != null && response.getBody().getResults() != null ?
+                response.getBody().getResults() :
+                new ArrayList<>();
     }
 }
