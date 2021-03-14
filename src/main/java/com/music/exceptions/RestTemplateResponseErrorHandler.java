@@ -22,7 +22,8 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
      * Handles error response returned from @{@link com.music.services.integrations.MusicService}.
      * Perfect place to implement error deserialization and return specific exceptions
      * with particular error response which can be used in API.
-     * @param httpResponse
+     *
+     * @param httpResponse @{@link ClientHttpResponse}
      * @throws IOException
      */
     @Override

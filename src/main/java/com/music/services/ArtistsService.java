@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Business layer service to retrieve information related to @{@link Artist}
+ */
 @Service
 public class ArtistsService {
 
@@ -24,7 +27,6 @@ public class ArtistsService {
     private ModelMapper mapper;
 
 //    #FIXME add more logging
-//    #FIXME documentation in API, interfaces, services
 
     @Autowired
     public ArtistsService(
@@ -41,7 +43,8 @@ public class ArtistsService {
      * Calling music service and returning List of possible artists with similar name. <br>
      * To reduce calls to iTunes service first exact match is checked in DB. <br>
      * Search results also are saved to database for later usage.
-     * @param artistName
+     *
+     * @param artistName artist name to search for possible @{@link Artist}
      * @return List of artists with similar names
      */
     public List<Artist> findArtists(String artistName) {
@@ -58,6 +61,13 @@ public class ArtistsService {
         return artists;
     }
 
+    /**
+     * Searches @{@link Artist} according AMG artist ID. In case in DB is not found @{@link MusicService}
+     * is called.
+     *
+     * @param amgArtistId AMG artist ID to search for @{@link Artist}
+     * @return @{@link java.util.Optional} with possible found @{@link Artist}
+     */
     public Optional<Artist> findArtist(Long amgArtistId) {
         Optional<Artist> foundArtist = this.artistRepository.findById(amgArtistId);
         if (foundArtist.isEmpty()) {
@@ -71,15 +81,25 @@ public class ArtistsService {
         return foundArtist;
     }
 
+    /**
+     * Finds all artists. Search is executed in chunks.
+     * @param page for which exact page search should be executed
+     * @param size size of one page results
+     * @return @{@link Page} with found @{@link Artist}
+     */
     public Page<Artist> getAllArtists(int page, int size) {
         Pageable pageRequest = PageRequest.of(page, size);
         return this.artistRepository.findAll(pageRequest);
     }
 
+    /**
+     * Updates @{@link Artist}
+     * @param artist @{@link Artist} to be saved or updated
+     * @return saved @{@link Artist}
+     */
     public Artist updateArtist(Artist artist) {
         return this.artistRepository.save(artist);
     }
-
 
     private Artist mapAndSaveArtist(Result searchResult) {
         return this.artistRepository.save(

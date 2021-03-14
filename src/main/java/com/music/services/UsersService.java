@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Business layer service to retrieve information related to @{@link User}
+ */
 @Service
 public class UsersService {
 
@@ -20,7 +23,14 @@ public class UsersService {
         this.artistsService = artistsService;
     }
 
-
+    /**
+     * Saves @{@link User} favorite @{@link Artist}. If user doesn't exist yet, it's created.
+     * If artist is not found, it's not favorited and empty @{@link java.util.Optional} is returned.
+     *
+     * @param amgArtistId user's favorite artist's AMG id
+     * @param userId - user's ID
+     * @return - @{@link java.util.Optional} with user's favorited @{@link Artist}
+     */
     public Optional<Artist> saveFavoriteArtist(Long amgArtistId, Long userId) {
         Optional<Artist> foundArtist = this.artistsService.findArtist(amgArtistId);
         if (foundArtist.isEmpty()) {
@@ -40,6 +50,13 @@ public class UsersService {
         return foundArtist;
     }
 
+    /**
+     * Searches for @{@link User} favorited @{@link Artist}. If none is selected,
+     * empty @{@link java.util.Optional} is returned.
+     *
+     * @param userId user's ID for which favorite artist should be found
+     * @return @{@link java.util.Optional} with possible found user's favorite @{@link Artist}
+     */
     public Optional<Artist> getUsersFavoriteArtist(Long userId) {
         Optional<User> user = this.userRepository.findById(userId);
         if (user.isPresent() && user.get().getFavoriteArtist() != null) {

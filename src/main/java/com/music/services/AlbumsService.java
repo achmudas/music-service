@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Business layer service to retrieve information related to @{@link Album}
+ */
 @Service
 public class AlbumsService {
 
@@ -25,6 +28,12 @@ public class AlbumsService {
         this.modelMapper = modelMapper;
     }
 
+
+    /**
+     * Retrieves albums for provided AMG artist IDs.
+     * @param amgArtistIds AMG artists IDs for which albums should be retrieved
+     * @return @{@link Map} where key - amgArtistId and value @{@link List} of @{@link Album}
+     */
     public Map<Long, List<Album>> retrieveAlbums(List<Long> amgArtistIds) {
         List<Result> results = this.musicService.retrieveAlbumsForArtist(amgArtistIds);
 
