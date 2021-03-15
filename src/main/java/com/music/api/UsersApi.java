@@ -1,7 +1,7 @@
 package com.music.api;
 
-import com.music.models.api.AlbumDTO;
-import com.music.models.api.ArtistDTO;
+import com.music.models.api.Album;
+import com.music.models.api.Artist;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -28,7 +28,7 @@ public interface UsersApi {
                     description = "Artist was saved as a favorite",
                     content = {@Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ArtistDTO.class)) }),
+                            schema = @Schema(implementation = Artist.class)) }),
             @ApiResponse(
                     responseCode = "404",
                     description = "Artist with provided id doesn't exist",
@@ -39,7 +39,7 @@ public interface UsersApi {
                     content = {@Content() })
     })
     @PostMapping(value="/{userId}/artists/{amgArtistId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ArtistDTO> saveFavoriteArtist(
+    ResponseEntity<Artist> saveFavoriteArtist(
             @Parameter(description = "User ID", required = true)
             @PathVariable("userId") Long userId,
             @Parameter(description = "AMG Artist id", required = true)
@@ -53,7 +53,7 @@ public interface UsersApi {
                     description = "Artist was saved as a favorite",
                     content = {@Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ArtistDTO.class)) }),
+                            schema = @Schema(implementation = Artist.class)) }),
             @ApiResponse(
                     responseCode = "404",
                     description = "User with provided id doesn't exist or it doesn't have favorite artist set",
@@ -64,7 +64,7 @@ public interface UsersApi {
                     content = {@Content() })
     })
     @GetMapping(value="/{userId}/artists" ,produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ArtistDTO> getFavoriteArtist(
+    ResponseEntity<Artist> getFavoriteArtist(
             @Parameter(description = "User ID", required = true)
             @PathVariable("userId") Long userId
     );
@@ -77,7 +77,7 @@ public interface UsersApi {
                     content = {@Content(
                             mediaType = "application/json",
                             array = @ArraySchema(
-                                    schema = @Schema(implementation = AlbumDTO.class))) }),
+                                    schema = @Schema(implementation = Album.class))) }),
             @ApiResponse(
                     responseCode = "404",
                     description = "User with provided id doesn't exist or it doesn't have favorite artist set",
@@ -88,7 +88,7 @@ public interface UsersApi {
                     content = {@Content() })
     })
     @GetMapping(value="/{userId}/artists/albums" ,produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<AlbumDTO>> getFavoriteArtistTopAlbums(
+    ResponseEntity<List<Album>> getFavoriteArtistTopAlbums(
             @Parameter(description = "User ID", required = true)
             @PathVariable("userId") Long userId
     );

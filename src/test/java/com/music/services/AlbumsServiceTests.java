@@ -3,7 +3,7 @@ package com.music.services;
 import com.music.models.external.CollectionType;
 import com.music.models.external.Result;
 import com.music.models.external.WrapperType;
-import com.music.models.internal.Album;
+import com.music.models.internal.AlbumEntity;
 import com.music.services.integrations.MusicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class AlbumsServiceTests {
     void testThatAlbumsAreCollectedAccordingAmgArtistId() {
         List<Result> results = getResults();
         when(musicService.retrieveAlbumsForArtist(anyList())).thenReturn(results);
-        Map<Long, Set<Album>> albums = this.albumsService.retrieveAlbums(
+        Map<Long, Set<AlbumEntity>> albums = this.albumsService.retrieveAlbums(
                 Arrays.asList(55555L, 3734L));
         assertThat(albums.keySet().size()).isEqualTo(2);
         assertThat(albums.get(55555L).size()).isOne();
@@ -57,7 +57,7 @@ class AlbumsServiceTests {
         res5.setWrapperType(WrapperType.COLLECTION);
         results.add(res5);
         when(musicService.retrieveAlbumsForArtist(anyList())).thenReturn(results);
-        Map<Long, Set<Album>> albums = this.albumsService.retrieveAlbums(
+        Map<Long, Set<AlbumEntity>> albums = this.albumsService.retrieveAlbums(
                 Arrays.asList(55555L, 3734L));
         assertThat(albums.keySet().size()).isEqualTo(2);
         assertThat(albums.get(55555L).size()).isOne();
@@ -94,7 +94,7 @@ class AlbumsServiceTests {
         res6.setWrapperType(WrapperType.COLLECTION);
         results.add(res6);
         when(musicService.retrieveAlbumsForArtist(anyList())).thenReturn(results);
-        Map<Long, Set<Album>> albums = this.albumsService.retrieveAlbums(
+        Map<Long, Set<AlbumEntity>> albums = this.albumsService.retrieveAlbums(
                 Arrays.asList(55555L, 3734L));
         assertThat(albums.get(55555L).size()).isEqualTo(5);
     }

@@ -8,11 +8,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
-@Entity
+@Entity(name = "album")
 @Setter
 @Getter
 @EqualsAndHashCode
-public class Album {
+public class AlbumEntity {
 
     @Id
     private Long collectionId;

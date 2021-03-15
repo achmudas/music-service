@@ -1,7 +1,7 @@
 package com.music.schedulers;
 
-import com.music.models.internal.Album;
-import com.music.models.internal.Artist;
+import com.music.models.internal.AlbumEntity;
+import com.music.models.internal.ArtistEntity;
 import com.music.services.AlbumsService;
 import com.music.services.ArtistsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ public class AlbumsUpdaterTests {
     private AlbumsService albumsService;
 
     @Captor
-    ArgumentCaptor<Artist> artistCaptor;
+    ArgumentCaptor<ArtistEntity> artistCaptor;
 
     @BeforeEach
     public void setUp() {
@@ -39,13 +39,13 @@ public class AlbumsUpdaterTests {
 
     @Test
     void testThatAlbumsAreUpdatedForTheArtistWhoDoesntHaveAny() {
-        Artist art1 = new Artist();
+        ArtistEntity art1 = new ArtistEntity();
         art1.setArtistName("test name");
         art1.setAmgArtistId(55555L);
-        List<Artist> artists = Arrays.asList(art1);
-        Page<Artist> page = new PageImpl<>(artists);
+        List<ArtistEntity> artists = Arrays.asList(art1);
+        Page<ArtistEntity> page = new PageImpl<>(artists);
         when(this.artistsService.getAllArtists(0, 10)).thenReturn(page);
-        Map<Long, Set<Album>> albums = getAlbums();
+        Map<Long, Set<AlbumEntity>> albums = getAlbums();
         when(this.albumsService.retrieveAlbums(Arrays.asList(55555L))).thenReturn(albums);
         when(this.artistsService.findArtist(55555L)).thenReturn(Optional.of(art1));
         this.updater.updateArtistsAlbums();
@@ -56,7 +56,7 @@ public class AlbumsUpdaterTests {
 
     @Test
     void testIfNoPageableResultFromDB() {
-        Page<Artist> page = new PageImpl<>(Arrays.asList());
+        Page<ArtistEntity> page = new PageImpl<>(Arrays.asList());
         when(this.artistsService.getAllArtists(0, 10)).thenReturn(page);
         this.updater.updateArtistsAlbums();
         verify(this.artistsService, times(0)).updateArtist(artistCaptor.capture());
@@ -64,16 +64,16 @@ public class AlbumsUpdaterTests {
 
     @Test
     void testThatWithMultipleUsersIsWorking() {
-        Artist art1 = new Artist();
+        ArtistEntity art1 = new ArtistEntity();
         art1.setArtistName("test name");
         art1.setAmgArtistId(55555L);
-        Artist art2 = new Artist();
+        ArtistEntity art2 = new ArtistEntity();
         art2.setArtistName("test name 2");
         art2.setAmgArtistId(55556L);
-        Page<Artist> page1 = new PageImpl<>(Arrays.asList(art1, art2));
+        Page<ArtistEntity> page1 = new PageImpl<>(Arrays.asList(art1, art2));
         when(this.artistsService.getAllArtists(0, 10)).thenReturn(page1);
-        Map<Long, Set<Album>> albums = getAlbums();
-        Album album3 = new Album();
+        Map<Long, Set<AlbumEntity>> albums = getAlbums();
+        AlbumEntity album3 = new AlbumEntity();
         album3.setArtistName("test name 2");
         album3.setAmgArtistId(55556L);
         album3.setCollectionId(102L);
@@ -91,9 +91,9 @@ public class AlbumsUpdaterTests {
         assertThat(artistCaptor.getValue().getAlbums().get(0).getCollectionId()).isEqualTo(102L);
     }
 
-    private Map<Long, Set<Album>> getAlbums() {
-        Map<Long, Set<Album>> albums = new HashMap<>();
-        Album album1 = new Album();
+    private Map<Long, Set<AlbumEntity>> getAlbums() {
+        Map<Long, Set<AlbumEntity>> albums = new HashMap<>();
+        AlbumEntity album1 = new AlbumEntity();
         album1.setArtistName("Someart");
         album1.setAmgArtistId(55555L);
         album1.setCollectionId(1423802L);
@@ -102,7 +102,7 @@ public class AlbumsUpdaterTests {
                 "v4/7a/07/62/7a076261-23f9-8846-1d65-0ecd045eeac9/source/100x100bb.jpg");
         album1.setReleaseDate(new Date());
 
-        Album album2 = new Album();
+        AlbumEntity album2 = new AlbumEntity();
         album2.setArtistName("Someart");
         album2.setAmgArtistId(55555L);
         album2.setCollectionId(1566802L);

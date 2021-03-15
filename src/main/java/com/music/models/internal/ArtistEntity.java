@@ -8,10 +8,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-@Entity
+@Entity(name = "artist")
 @Setter
 @Getter
-public class Artist {
+public class ArtistEntity {
 
     @Id
     private Long amgArtistId;
@@ -24,6 +24,6 @@ public class Artist {
     private WrapperType wrapperType;
 
     @OneToMany(cascade=CascadeType.ALL)
-    private List<Album> albums;
+    private List<AlbumEntity> albums;
 
 }

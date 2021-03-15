@@ -1,9 +1,9 @@
 package com.music.controllers;
 
-import com.music.models.api.AlbumDTO;
-import com.music.models.api.ArtistDTO;
-import com.music.models.internal.Album;
-import com.music.models.internal.Artist;
+import com.music.models.api.Album;
+import com.music.models.api.Artist;
+import com.music.models.internal.AlbumEntity;
+import com.music.models.internal.ArtistEntity;
 import com.music.services.ArtistsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,16 +35,16 @@ class ArtistsControllerTests {
     }
 
     @Test
-    void testThatArtistsAreMappedToArtistDTOAndReturned() {
+    void testThatArtistEntitiesAreMappedToArtistAndReturned() {
         String artistName = "jon";
-        Artist art1 = new Artist();
+        ArtistEntity art1 = new ArtistEntity();
         art1.setArtistName("Jon Bonjovi");
         art1.setAmgArtistId(55555L);
-        Artist art2 = new Artist();
+        ArtistEntity art2 = new ArtistEntity();
         art2.setArtistName("Jon Something");
         art2.setAmgArtistId(4444L);
         when(this.artistsService.findArtists(artistName)).thenReturn(Arrays.asList(art1, art2));
-        ResponseEntity<List<ArtistDTO>> response = this.controller.findArtists(artistName);
+        ResponseEntity<List<Artist>> response = this.controller.findArtists(artistName);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().size()).isEqualTo(2);
         assertThat(response.getBody().get(1).getAmgArtistId()).isEqualTo(4444L);
@@ -54,7 +54,7 @@ class ArtistsControllerTests {
     void testThatNoArtistsAreFound() {
         String artistName = "jon";
         when(this.artistsService.findArtists(artistName)).thenReturn(Arrays.asList());
-        ResponseEntity<List<ArtistDTO>> response = this.controller.findArtists(artistName);
+        ResponseEntity<List<Artist>> response = this.controller.findArtists(artistName);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody().isEmpty()).isTrue();
     }
@@ -63,7 +63,7 @@ class ArtistsControllerTests {
     void testThatNoArtistAccordingLongIdIsFound() {
         Long amgArtistId = 55555L;
         when(this.artistsService.findArtist(amgArtistId)).thenReturn(Optional.empty());
-        ResponseEntity<ArtistDTO> response = this.controller.getArtist(amgArtistId);
+        ResponseEntity<Artist> response = this.controller.getArtist(amgArtistId);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNull();
     }
@@ -71,11 +71,11 @@ class ArtistsControllerTests {
     @Test
     void testThatFavoriteArtistIsFoundButNoAlbums() {
         Long amgArtistId = 55555L;
-        Artist art1 = new Artist();
+        ArtistEntity art1 = new ArtistEntity();
         art1.setArtistName("Jon Bonjovi");
         art1.setAmgArtistId(55555L);
         when(this.artistsService.findArtist(amgArtistId)).thenReturn(Optional.of(art1));
-        ResponseEntity<List<AlbumDTO>> response = this.controller.getFavoriteAlbums(amgArtistId);
+        ResponseEntity<List<Album>> response = this.controller.getFavoriteAlbums(amgArtistId);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody().isEmpty()).isTrue();
     }
@@ -83,18 +83,18 @@ class ArtistsControllerTests {
     @Test
     void testThatAlbumsAreMappedAndReturned() {
         Long amgArtistId = 55555L;
-        Artist art1 = new Artist();
+        ArtistEntity art1 = new ArtistEntity();
         art1.setArtistName("Jon Bonjovi");
         art1.setAmgArtistId(55555L);
-        Album album1 = new Album();
+        AlbumEntity album1 = new AlbumEntity();
         album1.setCollectionName("Some album");
         album1.setCollectionId(42233434L);
-        Album album2 = new Album();
+        AlbumEntity album2 = new AlbumEntity();
         album2.setCollectionName("Another album");
         album2.setCollectionId(45454545L);
         art1.setAlbums(Arrays.asList(album1, album2));
         when(this.artistsService.findArtist(amgArtistId)).thenReturn(Optional.of(art1));
-        ResponseEntity<List<AlbumDTO>> response = this.controller.getFavoriteAlbums(amgArtistId);
+        ResponseEntity<List<Album>> response = this.controller.getFavoriteAlbums(amgArtistId);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().size()).isEqualTo(2);
         assertThat(response.getBody().get(1).getCollectionId()).isEqualTo(45454545L);
@@ -104,7 +104,7 @@ class ArtistsControllerTests {
     void testThatNoFavoriteArtistIsFoundForRetrievingAlbums() {
         Long amgArtistId = 55555L;
         when(this.artistsService.findArtist(amgArtistId)).thenReturn(Optional.empty());
-        ResponseEntity<List<AlbumDTO>> response = this.controller.getFavoriteAlbums(amgArtistId);
+        ResponseEntity<List<Album>> response = this.controller.getFavoriteAlbums(amgArtistId);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody().isEmpty()).isTrue();
     }

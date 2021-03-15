@@ -1,7 +1,7 @@
 package com.music.schedulers;
 
-import com.music.models.internal.Album;
-import com.music.models.internal.Artist;
+import com.music.models.internal.AlbumEntity;
+import com.music.models.internal.ArtistEntity;
 import com.music.services.AlbumsService;
 import com.music.services.ArtistsService;
 import org.slf4j.Logger;
@@ -46,15 +46,16 @@ public class AlbumsUpdater {
     @Scheduled(cron = "${albums.query.cron}")
     public void updateArtistsAlbums() {
         logger.info("Starting top albums update for artists");
-        Page<Artist> pageableResult = this.artistsService.getAllArtists(0, RESULT_SIZE);
+        Page<ArtistEntity> pageableResult = this.artistsService.getAllArtists(0, RESULT_SIZE);
 
         if (!pageableResult.hasContent()) {
+            logger.info("No artists to update albums.");
             return;
         }
 
         while (true) {
             List<Long> amgArtistIds = getArtistIdsForCheckingAlbums(pageableResult);
-            Map<Long, Set<Album>> albums = this.albumsService.retrieveAlbums(amgArtistIds);
+            Map<Long, Set<AlbumEntity>> albums = this.albumsService.retrieveAlbums(amgArtistIds);
             updateListOfAlbumsForArtists(albums);
             if (!pageableResult.hasNext()) {
                 break;
@@ -64,20 +65,20 @@ public class AlbumsUpdater {
         logger.info("Albums update was completed.");
     }
 
-    private Page<Artist> getNextPageableResult(Page<Artist> pageableResult) {
+    private Page<ArtistEntity> getNextPageableResult(Page<ArtistEntity> pageableResult) {
         Pageable pageable = pageableResult.nextPageable();
         pageableResult = this.artistsService.getAllArtists(pageable.getPageNumber(),
                 RESULT_SIZE);
         return pageableResult;
     }
 
-    private List<Long> getArtistIdsForCheckingAlbums(Page<Artist> pageableResult) {
+    private List<Long> getArtistIdsForCheckingAlbums(Page<ArtistEntity> pageableResult) {
         return pageableResult.getContent().stream()
-                .map(Artist::getAmgArtistId)
+                .map(ArtistEntity::getAmgArtistId)
                 .collect(Collectors.toList());
     }
 
-    private void updateListOfAlbumsForArtists(Map<Long, Set<Album>> albums) {
+    private void updateListOfAlbumsForArtists(Map<Long, Set<AlbumEntity>> albums) {
         albums.keySet().stream()
                 .map(amgArtistId -> this.artistsService.findArtist(amgArtistId))
                 .filter(Optional::isPresent)

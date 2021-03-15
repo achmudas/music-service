@@ -7,7 +7,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class ArtistDTO {
+public class Artist {
 
     private Long amgArtistId;
     private String artistName;

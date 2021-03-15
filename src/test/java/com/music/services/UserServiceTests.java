@@ -1,7 +1,7 @@
 package com.music.services;
 
-import com.music.models.internal.Artist;
-import com.music.models.internal.User;
+import com.music.models.internal.ArtistEntity;
+import com.music.models.internal.UserEntity;
 import com.music.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class UserServiceTests {
     private ArtistsService artistsService;
 
     @Captor
-    ArgumentCaptor<User> userCaptor;
+    ArgumentCaptor<UserEntity> userCaptor;
 
     @BeforeEach
     public void setUp() {
@@ -41,7 +41,7 @@ class UserServiceTests {
         Long amgArtistId = 55555L;
         Long userId = 2323L;
         when(this.artistsService.findArtist(55555L)).thenReturn(Optional.empty());
-        Optional<Artist> favoritedArtist = this.service.saveFavoriteArtist(amgArtistId, userId);
+        Optional<ArtistEntity> favoritedArtist = this.service.saveFavoriteArtist(amgArtistId, userId);
         verify(this.userRepository, times(0)).save(userCaptor.capture());
         assertThat(favoritedArtist).isNotPresent();
     }
@@ -50,12 +50,12 @@ class UserServiceTests {
     void testIfUserDoesntExistItsCreated() {
         Long amgArtistId = 55555L;
         Long userId = 2323L;
-        Artist artist = new Artist();
+        ArtistEntity artist = new ArtistEntity();
         artist.setAmgArtistId(amgArtistId);
         artist.setArtistName("Some artist");
         when(this.artistsService.findArtist(55555L)).thenReturn(Optional.of(artist));
         when(this.userRepository.findById(userId)).thenReturn(Optional.empty());
-        Optional<Artist> favoritedArtist = this.service.saveFavoriteArtist(amgArtistId, userId);
+        Optional<ArtistEntity> favoritedArtist = this.service.saveFavoriteArtist(amgArtistId, userId);
         verify(this.userRepository, times(1)).save(userCaptor.capture());
         assertThat(favoritedArtist.get().getAmgArtistId()).isEqualTo(amgArtistId);
         assertThat(userCaptor.getValue().getFavoriteArtist().getAmgArtistId()).isEqualTo(amgArtistId);
@@ -66,14 +66,14 @@ class UserServiceTests {
     void testThatArtistIsFavorited() {
         Long amgArtistId = 55555L;
         Long userId = 2323L;
-        Artist artist = new Artist();
+        ArtistEntity artist = new ArtistEntity();
         artist.setAmgArtistId(amgArtistId);
         artist.setArtistName("Some artist");
         when(this.artistsService.findArtist(55555L)).thenReturn(Optional.of(artist));
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setId(userId);
         when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
-        Optional<Artist> favoritedArtist = this.service.saveFavoriteArtist(amgArtistId, userId);
+        Optional<ArtistEntity> favoritedArtist = this.service.saveFavoriteArtist(amgArtistId, userId);
         verify(this.userRepository, times(1)).save(userCaptor.capture());
         assertThat(favoritedArtist.get().getAmgArtistId()).isEqualTo(amgArtistId);
         assertThat(userCaptor.getValue().getFavoriteArtist().getAmgArtistId()).isEqualTo(amgArtistId);
@@ -83,14 +83,14 @@ class UserServiceTests {
     void testIfUserHasFavoriteArtistItsReturned() {
         Long amgArtistId = 55555L;
         Long userId = 2323L;
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setId(userId);
-        Artist artist = new Artist();
+        ArtistEntity artist = new ArtistEntity();
         artist.setAmgArtistId(amgArtistId);
         artist.setArtistName("Some artist");
         user.setFavoriteArtist(artist);
         when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
-        Optional<Artist> favoritedArtist = this.service.getUsersFavoriteArtist(userId);
+        Optional<ArtistEntity> favoritedArtist = this.service.getUsersFavoriteArtist(userId);
         verify(this.userRepository, times(1)).findById(anyLong());
         assertThat(favoritedArtist.get().getAmgArtistId()).isEqualTo(amgArtistId);
     }
@@ -99,10 +99,10 @@ class UserServiceTests {
     void testIfUserHasNoFavoriteArtistItsNotReturned() {
         Long amgArtistId = 55555L;
         Long userId = 2323L;
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setId(userId);
         when(this.userRepository.findById(userId)).thenReturn(Optional.of(user));
-        Optional<Artist> favoritedArtist = this.service.getUsersFavoriteArtist(userId);
+        Optional<ArtistEntity> favoritedArtist = this.service.getUsersFavoriteArtist(userId);
         verify(this.userRepository, times(1)).findById(anyLong());
         assertThat(favoritedArtist).isNotPresent();
     }
@@ -112,7 +112,7 @@ class UserServiceTests {
         Long amgArtistId = 55555L;
         Long userId = 2323L;
         when(this.artistsService.findArtist(55555L)).thenReturn(Optional.empty());
-        Optional<Artist> favoritedArtist = this.service.saveFavoriteArtist(amgArtistId, userId);
+        Optional<ArtistEntity> favoritedArtist = this.service.saveFavoriteArtist(amgArtistId, userId);
         assertThat(favoritedArtist).isNotPresent();
         verify(this.userRepository, times(0)).findById(any(Long.class));
     }

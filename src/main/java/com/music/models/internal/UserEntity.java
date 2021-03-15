@@ -5,10 +5,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "user")
 @Setter
 @Getter
-public class User {
+public class UserEntity {
 
     @Id
     private Long id;
@@ -20,6 +20,6 @@ public class User {
 
     @ManyToOne
     @JoinColumn(referencedColumnName="amgArtistId")
-    private Artist favoriteArtist;
+    private ArtistEntity favoriteArtist;
 
 }

@@ -6,11 +6,10 @@ import lombok.ToString;
 
 import java.util.Date;
 
-//#FIXME rename to not DTO
 @Setter
 @Getter
 @ToString
-public class AlbumDTO {
+public class Album {
 
     private Long collectionId;
     private String collectionName;

@@ -1,9 +1,9 @@
 package com.music.controllers;
 
 import com.music.api.UsersApi;
-import com.music.models.api.AlbumDTO;
-import com.music.models.api.ArtistDTO;
-import com.music.models.internal.Artist;
+import com.music.models.api.Album;
+import com.music.models.api.Artist;
+import com.music.models.internal.ArtistEntity;
 import com.music.services.UsersService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -35,11 +35,11 @@ public class UsersController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<ArtistDTO> saveFavoriteArtist(Long userId, Long amgArtistId) {
+    public ResponseEntity<Artist> saveFavoriteArtist(Long userId, Long amgArtistId) {
         this.logger.info("Saving favorite artist: {} for user: {}", amgArtistId, userId);
-        Optional<Artist> favoritedArtist = this.usersService.saveFavoriteArtist(amgArtistId, userId);
+        Optional<ArtistEntity> favoritedArtist = this.usersService.saveFavoriteArtist(amgArtistId, userId);
         if (favoritedArtist.isPresent()) {
-            ArtistDTO mappedArtist = mapper.map(favoritedArtist.get(), ArtistDTO.class);
+            Artist mappedArtist = mapper.map(favoritedArtist.get(), Artist.class);
             this.logger.info("Following artist was favorited: {} for user: {}", mappedArtist, userId);
             return new ResponseEntity<>(mappedArtist, null, HttpStatus.OK);
         }
@@ -48,10 +48,10 @@ public class UsersController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<ArtistDTO> getFavoriteArtist(Long userId) {
-        Optional<Artist> favoritedArtist = this.usersService.getUsersFavoriteArtist(userId);
+    public ResponseEntity<Artist> getFavoriteArtist(Long userId) {
+        Optional<ArtistEntity> favoritedArtist = this.usersService.getUsersFavoriteArtist(userId);
         if (favoritedArtist.isPresent()) {
-            ArtistDTO mappedArtist = mapper.map(favoritedArtist.get(), ArtistDTO.class);
+            Artist mappedArtist = mapper.map(favoritedArtist.get(), Artist.class);
             this.logger.info("Following artist {} is favorited for user: {}", mappedArtist, userId);
             return new ResponseEntity<>(mappedArtist, null, HttpStatus.OK);
         }
@@ -60,11 +60,11 @@ public class UsersController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<List<AlbumDTO>> getFavoriteArtistTopAlbums(Long userId) {
-        Optional<Artist> artist = this.usersService.getUsersFavoriteArtist(userId);
+    public ResponseEntity<List<Album>> getFavoriteArtistTopAlbums(Long userId) {
+        Optional<ArtistEntity> artist = this.usersService.getUsersFavoriteArtist(userId);
         if (artist.isPresent() && !CollectionUtils.isEmpty(artist.get().getAlbums())) {
-            List<AlbumDTO> albums = artist.get().getAlbums().stream()
-                    .map(album -> mapper.map(album, AlbumDTO.class))
+            List<Album> albums = artist.get().getAlbums().stream()
+                    .map(album -> mapper.map(album, Album.class))
                     .collect(Collectors.toList());
             this.logger.info("Following albums {} are top for users {} favorited artist: {}", albums, userId, artist);
             return new ResponseEntity<>(albums, null, HttpStatus.OK);

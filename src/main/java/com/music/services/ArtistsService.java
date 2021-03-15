@@ -1,7 +1,7 @@
 package com.music.services;
 
 import com.music.models.external.Result;
-import com.music.models.internal.Artist;
+import com.music.models.internal.ArtistEntity;
 import com.music.repositories.ArtistRepository;
 import com.music.services.integrations.MusicService;
 import org.modelmapper.ModelMapper;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Business layer service to retrieve information related to @{@link Artist}
+ * Business layer service to retrieve information related to @{@link ArtistEntity}
  */
 @Service
 public class ArtistsService {
@@ -42,11 +42,11 @@ public class ArtistsService {
      * To reduce calls to iTunes service first exact match is checked in DB. <br>
      * Search results also are saved to database for later usage.
      *
-     * @param artistName artist name to search for possible @{@link Artist}
+     * @param artistName artist name to search for possible @{@link ArtistEntity}
      * @return List of artists with similar names
      */
-    public List<Artist> findArtists(String artistName) {
-        Optional<Artist> foundArtist = this.artistRepository.findByArtistNameIgnoreCase(artistName);
+    public List<ArtistEntity> findArtists(String artistName) {
+        Optional<ArtistEntity> foundArtist = this.artistRepository.findByArtistNameIgnoreCase(artistName);
         if (foundArtist.isPresent()) {
             return Arrays.asList(foundArtist.get());
         }
@@ -59,14 +59,14 @@ public class ArtistsService {
     }
 
     /**
-     * Searches @{@link Artist} according AMG artist ID. In case in DB is not found @{@link MusicService}
+     * Searches @{@link ArtistEntity} according AMG artist ID. In case in DB is not found @{@link MusicService}
      * is called.
      *
-     * @param amgArtistId AMG artist ID to search for @{@link Artist}
-     * @return @{@link java.util.Optional} with possible found @{@link Artist}
+     * @param amgArtistId AMG artist ID to search for @{@link ArtistEntity}
+     * @return @{@link java.util.Optional} with possible found @{@link ArtistEntity}
      */
-    public Optional<Artist> findArtist(Long amgArtistId) {
-        Optional<Artist> foundArtist = this.artistRepository.findById(amgArtistId);
+    public Optional<ArtistEntity> findArtist(Long amgArtistId) {
+        Optional<ArtistEntity> foundArtist = this.artistRepository.findById(amgArtistId);
         if (foundArtist.isEmpty()) {
             Optional<Result> searchedArtist = this.musicService.findArtistsByAmgArtistId(amgArtistId);
             if (searchedArtist.isEmpty() || searchedArtist.get().getAmgArtistId() == null) {
@@ -82,25 +82,25 @@ public class ArtistsService {
      * Finds all artists. Search is executed in chunks.
      * @param page for which exact page search should be executed
      * @param size size of one page results
-     * @return @{@link Page} with found @{@link Artist}
+     * @return @{@link Page} with found @{@link ArtistEntity}
      */
-    public Page<Artist> getAllArtists(int page, int size) {
+    public Page<ArtistEntity> getAllArtists(int page, int size) {
         Pageable pageRequest = PageRequest.of(page, size);
         return this.artistRepository.findAll(pageRequest);
     }
 
     /**
-     * Updates @{@link Artist}
-     * @param artist @{@link Artist} to be saved or updated
-     * @return saved @{@link Artist}
+     * Updates @{@link ArtistEntity}
+     * @param artist @{@link ArtistEntity} to be saved or updated
+     * @return saved @{@link ArtistEntity}
      */
-    public Artist updateArtist(Artist artist) {
+    public ArtistEntity updateArtist(ArtistEntity artist) {
         return this.artistRepository.save(artist);
     }
 
-    private Artist mapAndSaveArtist(Result searchResult) {
+    private ArtistEntity mapAndSaveArtist(Result searchResult) {
         return this.artistRepository.save(
-                this.mapper.map(searchResult, Artist.class)
+                this.mapper.map(searchResult, ArtistEntity.class)
         );
     }
 
