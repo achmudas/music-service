@@ -62,7 +62,41 @@ class AlbumsServiceTests {
         assertThat(albums.keySet().size()).isEqualTo(2);
         assertThat(albums.get(55555L).size()).isOne();
         assertThat(albums.get(3734L).size()).isEqualTo(2);
+    }
 
+    @Test
+    void testThatNoMoreThan5AlbumsAreSetForArtist() {
+        List<Result> results = getResults();
+        for (Result result : results) {
+            result.setAmgArtistId(55555L);
+            result.setCollectionId(new Random().nextLong());
+        }
+        Result res5 = new Result();
+        res5.setArtistName("Someart");
+        res5.setAmgArtistId(55555L);
+        res5.setCollectionId(1423802L);
+        res5.setCollectionName("Cross Road");
+        res5.setCollectionType(CollectionType.ALBUM);
+        res5.setArtworkUrl100("https://is4-ssl.mzstatic.com/image/thumb/Music124/" +
+                "v4/7a/07/62/7a076261-23f9-8846-1d65-0ecd045eeac9/source/100x100bb.jpg");
+        res5.setReleaseDate(new Date());
+        res5.setWrapperType(WrapperType.COLLECTION);
+        results.add(res5);
+        Result res6 = new Result();
+        res6.setArtistName("Someart");
+        res6.setAmgArtistId(55555L);
+        res6.setCollectionId(14232848L);
+        res6.setCollectionName("Album 6");
+        res6.setCollectionType(CollectionType.ALBUM);
+        res6.setArtworkUrl100("https://is4-ssl.mzstatic.com/image/thumb/Music124/" +
+                "v4/7a/07/62/7a076261-23f9-8846-1d65-0ecd045eeac9/source/100x100bb.jpg");
+        res6.setReleaseDate(new Date());
+        res6.setWrapperType(WrapperType.COLLECTION);
+        results.add(res6);
+        when(musicService.retrieveAlbumsForArtist(anyList())).thenReturn(results);
+        Map<Long, Set<Album>> albums = this.albumsService.retrieveAlbums(
+                Arrays.asList(55555L, 3734L));
+        assertThat(albums.get(55555L).size()).isEqualTo(5);
     }
 
     private List<Result> getResults () {

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toSet;
@@ -40,7 +41,25 @@ public class AlbumsService {
      */
     public Map<Long, Set<Album>> retrieveAlbums(List<Long> amgArtistIds) {
         List<Result> results = this.musicService.retrieveAlbumsForArtist(amgArtistIds);
+        Map<Long, Set<Album>> groupedAlbums = groupAlbumsPerArtist(results);
+        return limitValuesToFive(groupedAlbums);
+    }
 
+    /**
+     * Limit albums number to 5. Sometimes @{@link com.music.services.integrations.ItunesService} returns
+     * more than 5 albums despite limit=5 is set.
+     * @param groupedAlbums
+     * @return @{@link Map} where key - amgArtistId and value @{@link Set} of @{@link Album}.
+     */
+    private Map<Long, Set<Album>> limitValuesToFive(Map<Long, Set<Album>> groupedAlbums) {
+        return groupedAlbums.entrySet().stream()
+                        .collect(Collectors.toMap(
+                                entry -> entry.getKey(),
+                                entry -> entry.getValue().stream().limit(5).collect(Collectors.toSet())
+                        ));
+    }
+
+    private Map<Long, Set<Album>> groupAlbumsPerArtist(List<Result> results) {
         return results.stream()
                 .filter(result -> WrapperType.COLLECTION.equals(result.getWrapperType()))
                 .map(result -> modelMapper.map(result, Album.class))
