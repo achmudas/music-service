@@ -59,9 +59,7 @@ public class ItunesService implements MusicService{
                 restTemplate.exchange(uri, HttpMethod.POST, entity, SearchResponse.class);
         logger.info(RESPONSE_RETRIEVED, response);
 
-        return (response.getBody() != null && response.getBody().getResults() != null) ?
-                response.getBody().getResults() :
-                new ArrayList<>();
+        return getResults(response);
     }
 
     @Override
@@ -81,6 +79,10 @@ public class ItunesService implements MusicService{
                 restTemplate.exchange(uri, HttpMethod.GET, entity, SearchResponse.class);
         logger.info(RESPONSE_RETRIEVED, response);
 
+        return getResult(response);
+    }
+
+    private Optional<Result> getResult(HttpEntity<SearchResponse> response) {
         return response.getBody() != null &&
                 !CollectionUtils.isEmpty(response.getBody().getResults()) ?
                 Optional.of(response.getBody().getResults().get(0)) :
@@ -108,6 +110,10 @@ public class ItunesService implements MusicService{
                 restTemplate.exchange(uri, HttpMethod.POST, entity, SearchResponse.class);
         logger.info(RESPONSE_RETRIEVED, response);
 
+        return getResults(response);
+    }
+
+    private List<Result> getResults(HttpEntity<SearchResponse> response) {
         return response.getBody() != null && response.getBody().getResults() != null ?
                 response.getBody().getResults() :
                 new ArrayList<>();
