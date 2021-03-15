@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import java.util.Date;
 
+//#FIXME rename to not DTO
 @Setter
 @Getter
 @ToString

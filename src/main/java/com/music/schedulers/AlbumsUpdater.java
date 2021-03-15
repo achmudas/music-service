@@ -52,21 +52,23 @@ public class AlbumsUpdater {
             return;
         }
 
-//        #FIXME not really working with Tom Jones case
-
         while (true) {
             List<Long> amgArtistIds = getArtistIdsForCheckingAlbums(pageableResult);
             Map<Long, Set<Album>> albums = this.albumsService.retrieveAlbums(amgArtistIds);
             updateListOfAlbumsForArtists(albums);
-
             if (!pageableResult.hasNext()) {
                 break;
             }
-            Pageable pageable = pageableResult.nextPageable();
-            pageableResult = this.artistsService.getAllArtists(pageable.getPageNumber(),
-                    RESULT_SIZE);
+            pageableResult = getNextPageableResult(pageableResult);
         }
         logger.info("Albums update was completed.");
+    }
+
+    private Page<Artist> getNextPageableResult(Page<Artist> pageableResult) {
+        Pageable pageable = pageableResult.nextPageable();
+        pageableResult = this.artistsService.getAllArtists(pageable.getPageNumber(),
+                RESULT_SIZE);
+        return pageableResult;
     }
 
     private List<Long> getArtistIdsForCheckingAlbums(Page<Artist> pageableResult) {
