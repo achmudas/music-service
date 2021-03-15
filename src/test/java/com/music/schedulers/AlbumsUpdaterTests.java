@@ -62,7 +62,34 @@ public class AlbumsUpdaterTests {
         verify(this.artistsService, times(0)).updateArtist(artistCaptor.capture());
     }
 
-
+    @Test
+    void testThatWithMultipleUsersIsWorking() {
+        Artist art1 = new Artist();
+        art1.setArtistName("test name");
+        art1.setAmgArtistId(55555L);
+        Artist art2 = new Artist();
+        art2.setArtistName("test name 2");
+        art2.setAmgArtistId(55556L);
+        Page<Artist> page1 = new PageImpl<>(Arrays.asList(art1, art2));
+        when(this.artistsService.getAllArtists(0, 10)).thenReturn(page1);
+        Map<Long, Set<Album>> albums = getAlbums();
+        Album album3 = new Album();
+        album3.setArtistName("test name 2");
+        album3.setAmgArtistId(55556L);
+        album3.setCollectionId(102L);
+        album3.setCollectionName("BlaBla");
+        album3.setArtworkUrl100("https://is4-ssl.mzstatic.com/image/thumb/Music124/" +
+                "v4/7a/07/62/7a076261-23f9-8846-1d65-0ecd045eeac9/source/100x100bb.jpg");
+        album3.setReleaseDate(new Date());
+        albums.put(55556L, Set.of(album3));
+        when(this.albumsService.retrieveAlbums(Arrays.asList(55555L, 55556L))).thenReturn(albums);
+        when(this.artistsService.findArtist(55555L)).thenReturn(Optional.empty());
+        when(this.artistsService.findArtist(55556L)).thenReturn(Optional.of(art2));
+        this.updater.updateArtistsAlbums();
+        verify(this.artistsService, times(1)).updateArtist(artistCaptor.capture());
+        assertThat(artistCaptor.getValue().getAlbums().size()).isEqualTo(1);
+        assertThat(artistCaptor.getValue().getAlbums().get(0).getCollectionId()).isEqualTo(102L);
+    }
 
     private Map<Long, Set<Album>> getAlbums() {
         Map<Long, Set<Album>> albums = new HashMap<>();

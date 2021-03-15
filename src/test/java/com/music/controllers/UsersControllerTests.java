@@ -50,6 +50,16 @@ class UsersControllerTests {
         assertThat(response.getBody()).isNull();
     }
 
+    @Test
+    void testFavoriteArtistIsFound() {
+        Artist art1 = new Artist();
+        art1.setArtistName("Jon Bonjovi");
+        art1.setAmgArtistId(4444L);
+        when(this.usersService.getUsersFavoriteArtist(4444L)).thenReturn(Optional.of(art1));
+        ResponseEntity<ArtistDTO> response = this.controller.getFavoriteArtist(4444L);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getAmgArtistId()).isEqualTo(4444L);
+    }
 
     @Test
     void testThatFavoriteArtistForUserIsFoundButNoAlbums() {

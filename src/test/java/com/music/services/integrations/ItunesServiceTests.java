@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -91,6 +92,23 @@ class ItunesServiceTests {
                 .hasMessageContaining("Request failed, response code: + 401 UNAUTHORIZED, response: Unauthorized");
 
         this.server.verify();
+    }
+
+    @Test
+    void testThatArtistAccordingIdIsReturned() {
+        String response = "{\n" +
+                " \"resultCount\":1,\n" +
+                " \"results\": [\n" +
+                "{\"wrapperType\":\"artist\", \"artistType\":\"Artist\", \"artistName\":\"Harvey Schmidt\", " +
+                "\"artistLinkUrl\":\"https://music.apple.com/us/artist/harvey-schmidt/216259?uo=4\", \"artistId\":216259, " +
+                "\"amgArtistId\":172607, \"primaryGenreName\":\"Soundtrack\", \"primaryGenreId\":16}]\n" +
+                "}";
+
+        this.server.expect(requestTo("http://localhost:8080/lookup?amgArtistId=172607"))
+                .andRespond(withSuccess(response, MediaType.APPLICATION_JSON));
+        Optional<Result> result = this.musicService.findArtistsByAmgArtistId(172607L);
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result.get().getAmgArtistId()).isEqualTo(172607L);
     }
 
     @Test
