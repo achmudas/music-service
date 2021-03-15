@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.*;
 
@@ -52,6 +53,39 @@ public class AlbumsUpdaterTests {
         verify(this.artistsService, times(1)).updateArtist(artistCaptor.capture());
         assertThat(artistCaptor.getValue().getAlbums().size()).isEqualTo(2);
         assertThat(artistCaptor.getValue().getAlbums().get(1).getArtistName()).isEqualTo("Someart");
+    }
+
+    @Test
+    void testMultiplePageables() {
+        ArtistEntity art1 = new ArtistEntity();
+        art1.setArtistName("test name");
+        art1.setAmgArtistId(55555L);
+        Page<ArtistEntity> page1 = new PageImpl<>(Arrays.asList(art1), PageRequest.of(0, 10), 20);
+        ArtistEntity art2 = new ArtistEntity();
+        art2.setArtistName("test name 2");
+        art2.setAmgArtistId(55556L);
+        Page<ArtistEntity> page2 = new PageImpl<>(Arrays.asList(art2), PageRequest.of(1, 10), 20);
+        when(this.artistsService.getAllArtists(0, 10)).thenReturn(page1);
+        when(this.artistsService.getAllArtists(1, 10)).thenReturn(page2);
+        Map<Long, Set<AlbumEntity>> albums = getAlbums();
+        Map<Long, Set<AlbumEntity>> albums1 = new HashMap<>();
+        AlbumEntity album3 = new AlbumEntity();
+        album3.setArtistName("test name 2");
+        album3.setAmgArtistId(55556L);
+        album3.setCollectionId(102L);
+        album3.setCollectionName("BlaBla");
+        album3.setArtworkUrl100("https://is4-ssl.mzstatic.com/image/thumb/Music124/" +
+                "v4/7a/07/62/7a076261-23f9-8846-1d65-0ecd045eeac9/source/100x100bb.jpg");
+        album3.setReleaseDate(new Date());
+        albums1.put(55556L, Set.of(album3));
+        when(this.albumsService.retrieveAlbums(Arrays.asList(55555L))).thenReturn(albums);
+        when(this.albumsService.retrieveAlbums(Arrays.asList(55556L))).thenReturn(albums1);
+        when(this.artistsService.findArtist(55555L)).thenReturn(Optional.of(art1));
+        when(this.artistsService.findArtist(55556L)).thenReturn(Optional.of(art2));
+        this.updater.updateArtistsAlbums();
+        verify(this.artistsService, times(2)).updateArtist(artistCaptor.capture());
+        assertThat(artistCaptor.getAllValues().get(0).getAlbums().size()).isEqualTo(2);
+        assertThat(artistCaptor.getAllValues().get(1).getAlbums().get(0).getCollectionId()).isEqualTo(102L);
     }
 
     @Test
