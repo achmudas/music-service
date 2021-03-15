@@ -112,6 +112,19 @@ class ItunesServiceTests {
     }
 
     @Test
+    void testThatArtistAccordingIdIsNotReturned() {
+        String response = "{\n" +
+                " \"resultCount\":0,\n" +
+                " \"results\": []\n" +
+                "}";
+
+        this.server.expect(requestTo("http://localhost:8080/lookup?amgArtistId=172607"))
+                .andRespond(withSuccess(response, MediaType.APPLICATION_JSON));
+        Optional<Result> result = this.musicService.findArtistsByAmgArtistId(172607L);
+        assertThat(result).isNotPresent();
+    }
+
+    @Test
     void testThatListOfIdsAreMergedAndAlbumsAreReturned() {
         String response = "{\n" +
                 " \"resultCount\":2,\n" +
