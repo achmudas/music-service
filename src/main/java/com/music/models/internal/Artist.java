@@ -23,7 +23,7 @@ public class Artist {
     @Enumerated(EnumType.STRING)
     private WrapperType wrapperType;
 
-    @ManyToMany(cascade=CascadeType.ALL)
+    @OneToMany(cascade=CascadeType.ALL)
     private List<Album> albums;
 
 }

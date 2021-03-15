@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -47,7 +48,6 @@ public class AlbumsUpdater {
         logger.info("Starting top albums update for artists");
         Page<Artist> pageableResult = this.artistsService.getAllArtists(0, RESULT_SIZE);
 
-//        #FIXME need to refactor
         if (!pageableResult.hasContent()) {
             return;
         }
@@ -56,7 +56,7 @@ public class AlbumsUpdater {
 
         while (true) {
             List<Long> amgArtistIds = getArtistIdsForCheckingAlbums(pageableResult);
-            Map<Long, List<Album>> albums = this.albumsService.retrieveAlbums(amgArtistIds);
+            Map<Long, Set<Album>> albums = this.albumsService.retrieveAlbums(amgArtistIds);
             updateListOfAlbumsForArtists(albums);
 
             if (!pageableResult.hasNext()) {
@@ -75,14 +75,13 @@ public class AlbumsUpdater {
                 .collect(Collectors.toList());
     }
 
-    private void updateListOfAlbumsForArtists(Map<Long, List<Album>> albums) {
+    private void updateListOfAlbumsForArtists(Map<Long, Set<Album>> albums) {
         albums.keySet().stream()
                 .map(amgArtistId -> this.artistsService.findArtist(amgArtistId))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(artist -> {
-                    logger.debug("Updating albums for artist: {}", artist.getAmgArtistId());
-                    artist.setAlbums(albums.get(artist.getAmgArtistId()));
+                    artist.setAlbums(List.copyOf(albums.get(artist.getAmgArtistId())));
                     this.artistsService.updateArtist(artist);
                 });
     }

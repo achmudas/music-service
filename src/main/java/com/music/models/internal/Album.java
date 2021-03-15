@@ -1,18 +1,17 @@
 package com.music.models.internal;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Setter
 @Getter
-@ToString
+@EqualsAndHashCode
 public class Album {
 
     @Id
@@ -35,7 +34,4 @@ public class Album {
 
     @Column
     private Long amgArtistId;
-
-    @ManyToMany(mappedBy = "albums")
-    private List<Artist> artists;
 }
