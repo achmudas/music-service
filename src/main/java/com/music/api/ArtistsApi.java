@@ -37,7 +37,7 @@ public interface ArtistsApi {
                     content = {@Content() }),
             @ApiResponse(
                     responseCode = "400",
-                    description = "If not valid search term is provided",
+                    description = "Not valid search term is provided",
                     content = {@Content() }),
             @ApiResponse(
                     responseCode = "500",
